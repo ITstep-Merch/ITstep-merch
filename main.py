@@ -23,6 +23,9 @@ with app.app_context():
 @app.route('/')
 def home():
     return render_template('home.html')
+@app.route('/good')
+def good():
+    return render_template('good.html')
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

@@ -1,5 +1,35 @@
+.header-container{
+    display: flex;
+    justify-content: right;
 
+}
 
+.header-block{
+    width: 58%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.container-like-cart{
+    display: flex;
+    align-items: center;
+    width: 120px;
+    justify-content: space-between;
+}
+
+.like-container{
+    display: flex;
+    height: 100px;
+    align-items: center;
+
+}
+
+.likes-counter{
+    font-size: 22px;
+    margin-bottom: 40px;
+
+    
+}
 @media (max-width: 768px) {
 
 }
