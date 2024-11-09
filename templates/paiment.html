@@ -1,0 +1,65 @@
+{% include "./components/header.html" %}
+<div class="checkout-page">
+    <div class="order-form">
+        <h2>ОФОРМЛЕННЯ ЗАМОВЛЕННЯ</h2>
+        <form>
+            <div class="form-group">
+                <input type="text" placeholder="Ім'я">
+                <input type="text" placeholder="Прізвище">
+            </div>
+            <div class="form-group">
+                <input type="email" placeholder="E-Mail">
+                <input type="text" placeholder="Телефон">
+            </div>
+            <textarea placeholder="Коментар до замовлення"></textarea>
+        </form>
+    </div>
+    <div class="cart-summary">
+        <h2>ВАШ КОШИК</h2>
+        <div class="cart-item">
+            <img src="../static/public/t-shirt.png" alt="Футболка">
+            <div class="item-details">
+                <p>ФУТБОЛКА</p>
+                <p>Розмір: S</p>
+                <p>Колір: Білий</p>
+                <p>100$</p>
+            </div>
+        </div>
+        <div class="cart-item">
+            <img src="../static/public/t-shirt.png" alt="Футболка">
+            <div class="item-details">
+                <p>ФУТБОЛКА</p>
+                <p>Розмір: S</p>
+                <p>Колір: Білий</p>
+                <div class="total-sum">
+                    <p>100$</p>
+                </div>
+                
+            </div>
+        </div>
+        <div class="total-price">РАЗОМ 200$</div>
+    </div>
+    <div class="delivery-options">
+        <h2>ОБЕРІТЬ СПОСІБ ДОСТАВКИ</h2>
+        <label><input type="checkbox"> Нова Пошта - Відділення</label>
+        <div class="select-group">
+            <select><option>Місто</option></select>
+            <select><option>Відділення</option></select>
+        </div>
+        <div class="adres-or-poshtomat-chooser">
+            <label><input type="checkbox"> Нова Пошта - Поштомат</label>
+            <label><input type="checkbox"> Нова Пошта - Адресна доставка</label>
+        </div>
+    </div>
+    <div class="payment-options">
+        <h2>ОБЕРІТЬ СПОСІБ ОПЛАТИ</h2>
+        <div class="adres-or-poshtomat-chooser">
+            <label><input type="checkbox"> Накладний платіж</label>
+            <label><input type="checkbox"> Повна оплата на карту</label>
+            <label><input type="checkbox"> Lorem ipsum</label>
+        </div>
+    </div>
+    <button class="confirm-order-btn">ПІДТВЕРДИТИ ЗАМОВЛЕННЯ</button>
+</div>
+
+{% include "./components/footer.html" %}

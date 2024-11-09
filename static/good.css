@@ -1,0 +1,57 @@
+.goodcontainer{
+    display: flex;
+    padding-top: 50px;
+    height: 100vh;
+}
+
+.bg-good-container{
+    position: relative;
+    width: 50%;
+
+}
+.good-img{
+    background-image: url(./public/t-shirt.png);
+    width: 100%;
+    height: 900px;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+}
+
+.good-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 50%;
+    padding: 20px 20px 0px 20px;
+    flex: 1;
+    
+}
+
+.add-to-cart-btn{
+    background-color: var(--bg-blue);
+    color: white;
+    border: none;
+    height: 70px;
+    border-radius: 60px;
+}
+
+.good-name{
+    font-weight: bolder;
+    font-size: 32px;
+}
+
+.artcl{
+    color: #A4A4A4;
+    font-size: 15px;
+}
+
+.good-price{
+    font-weight: bolder;
+    font-size: 25px;
+}
+
+.description-header , .composition-and-care-header , .color-name , .size-name{
+    font-weight: bolder;
+    font-size: 25px;
+}
