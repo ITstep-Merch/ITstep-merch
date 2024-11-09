@@ -1,13 +1,14 @@
 .header-container{
     display: flex;
-    justify-content: right;
+    justify-content: space-between;
 
 }
 
 .header-block{
-    width: 60%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .container-like-cart{
@@ -30,6 +31,16 @@
 
     
 }
+
+.logo-img{
+    width: 200px;
+    height: 60px;
+}
+
+.like-img , .cart-img{
+    height: 25px;
+}
+
 @media (max-width: 768px) {
 
 }
