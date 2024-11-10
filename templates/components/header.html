@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% block styles %} {{ bootstrap.load_css() }} {% endblock %}
@@ -11,27 +13,60 @@
     <link rel="stylesheet" href="../../static/good.css">
     <link rel="stylesheet" href="../../static/paiment.css">
     <title>Document</title>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+          const likeButton = document.querySelector('.like-good-catalog');
+          const likesCounter = document.querySelector('.likes-counter');
+          let n = 0
+          likesCounter.textContent = n;
+          likeButton.addEventListener('click', () => {
+              likeButton.classList.add('animate');
+              setTimeout(() => {
+                  likeButton.classList.remove('animate');
+              }, 450); 
+              likeButton.style.backgroundImage = "url('/static/public/likeIcon-hover.png')";
+              n += 1;
+              likesCounter.textContent = n;
+          });
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+          const cartButton = document.querySelector('.cart-good-catalog');
+          const cartCounter = document.querySelector('.cart-counter');
+          let n = 0
+          cartCounter.textContent = n;
+          cartButton.addEventListener('click', () => {
+              cartButton.classList.add('animate');
+              setTimeout(() => {
+                cartButton.classList.remove('animate');
+              }, 450); 
+              cartButton.style.backgroundImage = "url('/static/public/cartIcon-hover.png')";
+              n += 1;
+              cartCounter.textContent = n;
+          });
+      });
+  </script>
   </head>
   <body>
     <div class="center-content">
       <header>
         <div class="header-container">
           <div class="header-block">
-            <div class="logo">
+            <a href = "{{url_for('home')}}" class="logo">
               <img src="../../static/public/logo.png" alt="" class="logo-img">
-            </div>
+            </a>
             <div class="container-like-cart">
              <div class="like-container">
               <div class="like">
                 <img src="../../static/public/likeIcon.png" alt="" class="like-img">
               </div>
-              <div class="likes-counter">0</div>
+              <div class="likes-counter"></div>
              </div>
              <div class="like-container">
-              <div class="like">
+              <a href = "{{url_for('paiment')}}" class="like">
                 <img src="../../static/public/cartIcon.png" alt="" class="cart-img">
-              </div>
-              <div class="likes-counter">0</div>
+              </a>
+              <div class="cart-counter"></div>
              </div>
             </div>
         </div>

@@ -22,6 +22,8 @@ body {
 
 .order-form, .delivery-options, .payment-options {
     grid-column: 1 / 2;
+    border-radius: 5px;
+    border-color: #5a5a5a92;
 }
 
 .cart-summary {
