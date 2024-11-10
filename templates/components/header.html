@@ -14,35 +14,49 @@
     <link rel="stylesheet" href="../../static/paiment.css">
     <title>Document</title>
     <script>
+      let cartCounterOnPage = 0
+      let likesCounterOnPage = 0
       document.addEventListener('DOMContentLoaded', () => {
           const likeButton = document.querySelector('.like-good-catalog');
           const likesCounter = document.querySelector('.likes-counter');
-          let n = 0
-          likesCounter.textContent = n;
+          likesCounter.textContent = likesCounterOnPage;
           likeButton.addEventListener('click', () => {
               likeButton.classList.add('animate');
               setTimeout(() => {
                   likeButton.classList.remove('animate');
               }, 450); 
               likeButton.style.backgroundImage = "url('/static/public/likeIcon-hover.png')";
-              n += 1;
-              likesCounter.textContent = n;
+              likesCounterOnPage += 1;
+              likesCounter.textContent = likesCounterOnPage;
           });
       });
 
       document.addEventListener('DOMContentLoaded', () => {
           const cartButton = document.querySelector('.cart-good-catalog');
           const cartCounter = document.querySelector('.cart-counter');
-          let n = 0
-          cartCounter.textContent = n;
+          cartCounter.textContent = cartCounterOnPage;
           cartButton.addEventListener('click', () => {
               cartButton.classList.add('animate');
               setTimeout(() => {
                 cartButton.classList.remove('animate');
               }, 450); 
               cartButton.style.backgroundImage = "url('/static/public/cartIcon-hover.png')";
-              n += 1;
-              cartCounter.textContent = n;
+              cartCounterOnPage += 1;
+              cartCounter.textContent = cartCounterOnPage;
+          });
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+          const toCartButton = document.querySelector('.add-to-cart-btn');
+          const cartCounter = document.querySelector('.cart-counter');
+          cartCounter.textContent = cartCounterOnPage;
+          toCartButton.addEventListener('click', () => {
+            toCartButton.classList.add('animate');
+              setTimeout(() => {
+                toCartButton.classList.remove('animate');
+              }, 450); 
+              cartCounterOnPage += 1;
+              cartCounter.textContent = cartCounterOnPage;
           });
       });
   </script>

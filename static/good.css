@@ -55,3 +55,25 @@
     font-weight: bolder;
     font-size: 25px;
 }
+
+.add-to-cart-btn.animate {
+    animation: cartbeat 0.45s;
+}
+
+@keyframes cartbeat { /*потрібно пофіксити, при кліку на сердечко, анімація рендериться з нуля та дьоргається*/
+    0% {
+        transform: scale(1);
+    }
+    40% {
+        transform: scale(0.9);
+    }
+    60% {
+        transform: scale(1);
+    }
+    80% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
