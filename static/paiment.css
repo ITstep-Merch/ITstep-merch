@@ -22,7 +22,7 @@ body {
 
 .order-form, .delivery-options, .payment-options {
     grid-column: 1 / 2;
-    border-radius: 5px;
+    border-radius: 10px;
     border-color: #5a5a5a92;
 }
 
@@ -36,7 +36,8 @@ body {
     padding: 20px;
     border: 1px solid #000;
     background-color: #fff;
-
+    border-color: #5a5a5a92;
+    border-radius: 10px;
 }
 
 .confirm-order-btn {
@@ -48,6 +49,7 @@ body {
     cursor: pointer;
     font-size: 16px;
     text-align: center;
+    border-radius: 10px;
 }
 
 h2 {

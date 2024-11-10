@@ -42,6 +42,50 @@
     height: 20px;
 }
 
+
+
+/* .like-container {
+    position: relative;
+    display: inline-block;
+}
+
+.accDropdownChild {
+    display: none;
+    background-color: rgba(57, 57, 57, 0.755);
+    backdrop-filter: blur(5px);
+    position: absolute; 
+    top: 100%; 
+    left: 0; 
+    z-index: 1; 
+    border-radius: 8px;
+
+}
+
+.accDropdownChild a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    width: 250px;
+}
+
+.accDropdownChild img {
+    all: unset;
+    width: 25px;
+    margin: 4px;
+}
+
+.dropdownAccount:hover .accDropdownChild {
+    display: block;
+}
+
+.containerForMenu{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0px 0px 10px;
+
+} */
+
 @media (max-width: 768px) {
 
 }
