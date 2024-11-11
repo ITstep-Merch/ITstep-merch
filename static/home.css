@@ -68,6 +68,7 @@
     border-radius: 45px;
     border: none;
     font-size: 20px;
+
 }
 
 .welcome-page-catalog-container h1{
@@ -91,22 +92,22 @@
 
 .like-good-catalog{
     background-image: url(./public/likeIcon.png);
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     background-repeat: no-repeat;
     background-size: contain; 
     border: none; 
     outline: none;
     cursor: pointer;
     background-color: transparent;
-    transition: 0.1s;
+    transition: 0.2s;
 }
 
 .like-good-catalog.animate {
     animation: heartbeat 0.45s;
 }
 
-.like-good-catalog:active {
+.liked {
     background-image: url(./public/likeIcon-hover.png);
 }
 
@@ -130,29 +131,29 @@
 
 .like-good-catalog:hover{
     background-image: url(./public/likeIcon-hover.png);
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     background-repeat: no-repeat;
     background-size: contain; 
 }
 
 .cart-good-catalog{
     background-image: url(./public/cartIcon.png);
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     background-repeat: no-repeat;
     background-size: contain; 
     border: none; 
     outline: none;
     cursor: pointer;
     background-color: transparent;
-    transition: 0.1s;
+    transition: 0.2s;
 }
 
 .cart-good-catalog:hover{
     background-image: url(./public/cartIcon-hover.png);
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     background-repeat: no-repeat;
     background-size: contain; 
 }
@@ -163,7 +164,7 @@
 
 .options-good-catalog{
     padding: 20px;
-    width: 100px;
+    width: 120px;
     display: flex;
     justify-content: space-between;
 }
@@ -173,7 +174,7 @@
         transform: scale(1);
     }
     40% {
-        transform: scale(0.7);
+        transform: scale(0.8);
     }
     60% {
         transform: scale(1);
@@ -237,6 +238,8 @@
 .options-good-catalog-wrapper:hover .good-item-original {
     opacity: 0; 
 }
+
+
 
 
 @media (max-width: 768px) {

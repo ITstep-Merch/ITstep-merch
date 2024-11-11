@@ -20,13 +20,19 @@
 
 .like-container{
     display: flex;
-    height: 100px;
-    align-items: center;
+    align-items: end;
+    height: min-content;
+    transition: 2s;
 }
 
 .likes-counter{
-    font-size: 20px;
-    margin-bottom: 40px;  
+    font-size: 17px; 
+    display: flex;
+    align-items: flex-start; 
+    justify-content: center;
+    padding-top: 0;
+    height: 35px; /* Фіксована висота для прикладу */
+    margin-top: 0;
 }
 
 .cart-counter{
@@ -42,49 +48,107 @@
     height: 20px;
 }
 
-
-
-/* .like-container {
+.like-container {
     position: relative;
-    display: inline-block;
+    width: 35px;
+    display: flex;
+    justify-content: space-between;
 }
 
-.accDropdownChild {
-    display: none;
-    background-color: rgba(57, 57, 57, 0.755);
-    backdrop-filter: blur(5px);
+.likeDropdownChild {
+    opacity: 0;
+    visibility: hidden;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
     position: absolute; 
     top: 100%; 
-    left: 0; 
+    right: 40%; 
     z-index: 1; 
     border-radius: 8px;
-
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.accDropdownChild a {
+.likeDropdownChild a {
     color: white;
     text-decoration: none;
     display: block;
     width: 250px;
 }
 
-.accDropdownChild img {
-    all: unset;
-    width: 25px;
-    margin: 4px;
+.likeDropdownChild h1 {
+    color: rgb(0, 0, 0);
+    width: 450px;
+    font-size: 20px;
+    text-transform: uppercase;
 }
 
-.dropdownAccount:hover .accDropdownChild {
-    display: block;
+.likeDropdownChild.show {
+    opacity: 1;
+    visibility: visible; 
 }
 
-.containerForMenu{
+.likeDropdownChild.close {
+    opacity: 0;
+    visibility: hidden; 
+}
+
+.containerForLike{
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 10px 0px 0px 10px;
+    margin: 10px 35px 10px 10px;
+}
 
-} */
+.close-img{
+    width: 20px;
+}
+
+.containerForLike h1{
+    padding: 20px;
+    margin: 0px;
+    width: 300px;
+}
+
+.like{
+    border: none;
+    background-color: transparent;
+}
+
+.button-next-in-like{
+    text-transform: uppercase;
+    background-color: #0000FF;
+    padding: 20px 45px 20px 45px;
+    border-radius:50px;
+    width: max-content;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.button-next-in-like.animate {
+    animation: cartbeatButtonInLikes 0.45s;
+}
+
+@keyframes cartbeatButtonInLikes { /*потрібно пофіксити, при кліку на сердечко, анімація рендериться з нуля та дьоргається*/
+    0% {
+        transform: scale(1);
+    }
+    40% {
+        transform: scale(0.9);
+    }
+    60% {
+        transform: scale(1);
+    }
+    80% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
 
 @media (max-width: 768px) {
 

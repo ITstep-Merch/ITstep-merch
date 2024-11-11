@@ -14,20 +14,65 @@
     <link rel="stylesheet" href="../../static/paiment.css">
     <title>Document</title>
     <script>
+      let numberOfItems = localStorage.length;
       let cartCounterOnPage = 0
-      let likesCounterOnPage = 0
+      let likeCounter = 0
+
+      for (let i = 0; i < localStorage.length; i++){
+        const get_key = localStorage.key(i);
+        const get_value = localStorage.getItem(get_key);
+
+        const parce = JSON.parse(get_value);
+
+        if (parce.option === "Like"){
+          likeCounter += 1
+        }
+      }
+
+      let likesCounterOnPage = likeCounter
+
+      function initializeLikesCounter() {
+        const likesCounter = document.querySelector('.likes-counter');
+        likeCounter = 0;
+
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          const item = JSON.parse(localStorage.getItem(key) || "{}");
+
+          if (item.option === "Like") {
+            likeCounter += 1;
+          }
+
+          const idForGood = document.getElementById(key);
+          console.log()
+
+        }
+
+        if (likesCounter) {
+          likesCounter.textContent = likeCounter;
+        }
+
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
+
+      });
+      document.addEventListener('DOMContentLoaded', () => {
+          initializeLikesCounter()
           const likeButton = document.querySelector('.like-good-catalog');
           const likesCounter = document.querySelector('.likes-counter');
+          const nameForGood = document.querySelector('.good-name');
+
+          const IDForGood = nameForGood.id;
+          console.log(IDForGood)
           likesCounter.textContent = likesCounterOnPage;
+
+          
           likeButton.addEventListener('click', () => {
               likeButton.classList.add('animate');
               setTimeout(() => {
                   likeButton.classList.remove('animate');
               }, 450); 
-              likeButton.style.backgroundImage = "url('/static/public/likeIcon-hover.png')";
-              likesCounterOnPage += 1;
-              likesCounter.textContent = likesCounterOnPage;
           });
       });
 
@@ -49,6 +94,7 @@
       document.addEventListener('DOMContentLoaded', () => {
           const toCartButton = document.querySelector('.add-to-cart-btn');
           const cartCounter = document.querySelector('.cart-counter');
+
           cartCounter.textContent = cartCounterOnPage;
           toCartButton.addEventListener('click', () => {
             toCartButton.classList.add('animate');
@@ -59,6 +105,82 @@
               cartCounter.textContent = cartCounterOnPage;
           });
       });
+
+      document.addEventListener('DOMContentLoaded', () => {
+          const buttonNextInLike = document.querySelector('.button-next-in-like');
+          buttonNextInLike.addEventListener('click', () => {
+            buttonNextInLike.classList.add('animate');
+              setTimeout(() => {
+                buttonNextInLike.classList.remove('animate');
+              }, 450); 
+          });
+      });
+
+      function toggleDropdown() {
+        const dropdown = document.querySelector('.likeDropdownChild');
+        if (dropdown.classList.contains('show')) {
+            dropdown.classList.add('close');
+            dropdown.classList.remove('show');
+            // dropdown.classList.remove('close');
+            setTimeout(() => {
+                dropdown.classList.remove('close');
+            }, 300); 
+        } else {
+            dropdown.classList.add('show');
+        }
+      }
+
+      function saveGoodToLocalStorage(ID) {
+        const nameForGoodText = document.querySelector('.good-name').textContent;
+        const nameForGood = document.querySelector('.like-good-catalog');
+        const priceForGood = document.querySelector('.good-price').textContent;
+        
+        const goodLike = {
+            name: nameForGoodText, 
+            price: priceForGood, 
+            id: ID,
+            option: "Like"
+        }
+
+        localStorage.setItem(ID, JSON.stringify(goodLike));
+
+        initializeLikesCounter()
+      }
+
+      function toggleLike(ID){
+        findElementLikeButton = document.getElementById(ID)
+        const isLiked = findElementLikeButton.classList.contains('liked');
+        findElementLikeButton.classList.toggle('liked')
+        const likesCounter = document.querySelector('.likes-counter');
+
+        if (isLiked) {
+          localStorage.removeItem(ID)
+          likeCounter -= 1;
+          likesCounter.textContent = likeCounter;
+        } else {
+          saveGoodToLocalStorage(ID);
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        for (let i = 0; i < localStorage.length; i++) {
+          const getKeys = localStorage.key(i);
+          const toLikeAfterReload = document.getElementById(getKeys);
+          if (toLikeAfterReload) {
+              toLikeAfterReload.classList.add('liked');
+          }
+        }
+      })
+      
+      function scrollToCatalog(){
+        event.preventDefault(); // Prevent any default behavior
+        document.getElementById('catalog-title').scrollIntoView({
+          behavior: 'smooth', // Smooth scrolling
+          block: 'start' // Align to the top of the footer
+        });
+      }
+
+
   </script>
   </head>
   <body>
@@ -69,34 +191,30 @@
             <a href = "{{url_for('home')}}" class="logo">
               <img src="../../static/public/logo.png" alt="" class="logo-img">
             </a>
+
             <div class="container-like-cart">
+
              <div class="like-container">
-              <div class="like">
+              <button class="like" onclick="toggleDropdown()">
                 <img src="../../static/public/likeIcon.png" alt="" class="like-img">
-              </div>
+              </button>
 
               <div class="likes-counter"></div>
 
-              <!-- <div className={styles.likeDropdownChild}></div>
-                <div className={styles.containerForlike}>
-                  <a href="">Manage my account</a>
+              <div class="likeDropdownChild">
+                <div class="containerForLike">
+                  <h1 href="">вподобайки</h1>
+                  <botton onclick = "toggleDropdown()"><img src="../../static/public/close.png" alt="" class="close-img"></botton>
                 </div>
-                <div className={styles.containerForLike}>
-                  <a href="/dwdw">My order</a>
-                </div>
-                <div className={styles.containerForLike}>
-                  <a href="">My cancellations</a>
-                </div>
-                <div className={styles.containerForLike}>
-                  <a href="">My reviews</a>
-                </div>
-                <div className={styles.containerForLike}>
-                  <a href="">Log out</a>
-                </div>
-              </div> -->
+                <!-- <div class="button-next-in-like">
+                  ОФОРМИТИ ЗАМОВЛЕННЯ
+                </div> -->
 
+              </div>
+              
              </div>
-             <div class="like-container">
+
+             <div class="cart-container">
               <a href = "{{url_for('paiment')}}" class="like">
                 <img src="../../static/public/cartIcon.png" alt="" class="cart-img">
               </a>

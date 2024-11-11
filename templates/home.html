@@ -2,7 +2,7 @@
 
 <div class="bg-image-welcome-page-container">
     <h1 class="upper-text">IT STEP MERCH<br> <span>Buy our merch</span></h1>
-    <button class="to-catalog-btn">В КАТАЛОГ</button>
+    <button class="to-catalog-btn" onclick="scrollToCatalog()">В КАТАЛОГ</button>
 </div>
 
 <div class="bg-image-welcome-page-about-container">
@@ -11,10 +11,10 @@
 </div>
 
 <div class="welcome-page-catalog-container">
-    <h1 class="main-text-catalog">каталог товарів</h1>
+    <h1 class="main-text-catalog" id="catalog-title">каталог товарів</h1>
     <div class="welcome-page-good-container">
         <div class="options-good-catalog">
-            <button class="like-good-catalog"></button>
+            <button class="like-good-catalog" id="1" onclick=" toggleLike(1)" ></button>
             <button class="cart-good-catalog"> </button>
         </div>
         <div class="options-good-catalog-wrapper">
@@ -26,6 +26,8 @@
             <div class="good-price">$100</div>
         </div> 
     </div>
+
+    
 </div>
 
 {% include "./components/footer.html" %}

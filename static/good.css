@@ -57,10 +57,10 @@
 }
 
 .add-to-cart-btn.animate {
-    animation: cartbeat 0.45s;
+    animation: cartbeatButton 0.45s;
 }
 
-@keyframes cartbeat { /*потрібно пофіксити, при кліку на сердечко, анімація рендериться з нуля та дьоргається*/
+@keyframes cartbeatButton { /*потрібно пофіксити, при кліку на сердечко, анімація рендериться з нуля та дьоргається*/
     0% {
         transform: scale(1);
     }
