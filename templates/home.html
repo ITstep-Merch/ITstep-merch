@@ -1,31 +1,42 @@
 {% include "./components/header.html" %}
 
 <div class="bg-image-welcome-page-container">
-    <h1 class="upper-text">IT STEP MERCH<br> <span>Buy our merch</span></h1>
-    <button class="to-catalog-btn">В КАТАЛОГ</button>
+  <h1 class="upper-text">
+    IT STEP MERCH<br />
+    <span>Buy our merch</span>
+  </h1>
+  <button class="to-catalog-btn">В КАТАЛОГ</button>
 </div>
 
 <div class="bg-image-welcome-page-about-container">
-    <h1 class="main-text-about">наша<br> <span>мета</span></h1>
-    <h2 class="about-text">Наша мета — зробити бренд ІТ СТЕП Університету відомим і гордим символом якості освіти та сучасного підходу до навчання. Обирайте мерч, носіть з гордістю та долучайтеся до великої сім'ї ІТ СТЕП!</h2>
+  <h1 class="main-text-about">
+    наша<br />
+    <span>мета</span>
+  </h1>
+  <h2 class="about-text">
+    Наша мета — зробити бренд ІТ СТЕП Університету відомим і гордим символом якості освіти та сучасного підходу до навчання. Обирайте мерч, носіть з
+    гордістю та долучайтеся до великої сім'ї ІТ СТЕП!
+  </h2>
 </div>
 
 <div class="welcome-page-catalog-container">
-    <h1 class="main-text-catalog">каталог товарів</h1>
+  <h1 class="main-text-catalog">каталог товарів</h1>
+  {% for good in all_goods %}
     <div class="welcome-page-good-container">
         <div class="options-good-catalog">
-            <button class="like-good-catalog"></button>
-            <button class="cart-good-catalog"> </button>
+        <button class="like-good-catalog"></button>
+        <button class="cart-good-catalog"></button>
         </div>
         <div class="options-good-catalog-wrapper">
-            <div class="good-item-container">
-                <img class="good-item good-item-original" src="../static/public/good-catalog.png" alt="good item"/>
-                <img class="good-item good-item-hover" src="../static/public/good-catalog-hover.png" alt="good item"/>
-            </div>
-            <a class="good-name" href = "{{url_for('good')}}">zrada t-shirt</a>
-            <div class="good-price">$100</div>
-        </div> 
-    </div>
+        <div class="good-item-container">
+            <img class="good-item good-item-original" src="../static/public/good-catalog.png" alt="good item" />
+            <img class="good-item good-item-hover" src="../static/public/good-catalog-hover.png" alt="good item" />
+        </div>
+        <a class="good-name" href="{{url_for('good')}}">{{good.name}}</a>
+        <div class="good-price">{{good.price}}</div>
+        </div>
+    {% endfor %}
+  </div>
 </div>
 
 {% include "./components/footer.html" %}
