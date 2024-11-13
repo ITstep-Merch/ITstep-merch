@@ -5,7 +5,7 @@
         IT STEP MERCH<br>
          <span>Buy our merch</span>
         </h1>
-    <button class="to-catalog-btn" onclick="scrollToCatalog()">В КАТАЛОГ</button>
+    <button class="to-catalog-btn" onclick="scrollToCatalog()" >В КАТАЛОГ</button>
 </div>
 
 <div class="bg-image-welcome-page-about-container">
@@ -20,19 +20,23 @@
 </div>
 
 <div class="welcome-page-catalog-container">
-    <h1 class="main-text-catalog">каталог товарів</h1>
-    {% for good in all_goods %}
+    <h1 class="main-text-catalog" id="catalogTitle">каталог товарів</h1>
+    
     <div class="welcome-page-good-container">
-        <div class="options-good-catalog">
-            <button class="like-good-catalog" id="1" onclick=" toggleLike(1)" ></button>
-            <button class="cart-good-catalog"> </button>
-        </div>
-        <div class="options-good-catalog-wrapper">
-            <div class="good-item-container">
-                <img class="good-item good-item-original" src="../static/public/good-catalog.png" alt="good item"/>
-                <img class="good-item good-item-hover" src="../static/public/good-catalog-hover.png" alt="good item"/>
+        {% for good in all_goods %}
+
+        <div class="good-catalog-wrapper">
+            <div class="options-good-catalog-flex">
+                <div class="options-good-catalog">
+                    <button class="like-good-catalog" id="{{good.id}}" onclick="toggleLike('{{good.id}}'); animateLike('{{good.id}}')"></button>
+                    <button class="cart-good-catalog"> </button>
+                </div>
             </div>
-            <a class="good-name" href = "{{url_for('good')}}">{{good.name}}</a>
+            <div class="good-item-container">
+                <img class="good-item good-item-original" src="{{good.img_url_front}}" alt="good item"/>
+                <img class="good-item good-item-hover" src="{{good.img_url_back}}" alt="good item"/>
+            </div>
+            <a class="good-name" href = "{{url_for('good', id=good.id)}}">{{good.name}}</a>
             <div class="good-price">${{good.price}}</div>
         </div> 
         {% endfor %}

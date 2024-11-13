@@ -12,8 +12,9 @@
     <link rel="stylesheet" href="../../static/footer.css">
     <link rel="stylesheet" href="../../static/good.css">
     <link rel="stylesheet" href="../../static/payment.css">
-    <title>Document</title>
+    <title>It Step Shop</title>
     <script>
+
       let numberOfItems = localStorage.length;
       let cartCounterOnPage = 0
       let likeCounter = 0
@@ -51,29 +52,23 @@
         if (likesCounter) {
           likesCounter.textContent = likeCounter;
         }
+      }
 
+      function animateLike(ID){
+        initializeLikesCounter()
+        const likeButton = document.querySelector('.like-good-catalog');
+        const likeButtonID = document.getElementById(ID);
+          
+        likeButton.addEventListener('click', () => {
+          likeButton.classList.add('animate');
+          setTimeout(() => {
+            likeButton.classList.remove('animate');
+          }, 450); 
+        });
       }
 
       document.addEventListener('DOMContentLoaded', () => {
-
-      });
-      document.addEventListener('DOMContentLoaded', () => {
           initializeLikesCounter()
-          const likeButton = document.querySelector('.like-good-catalog');
-          const likesCounter = document.querySelector('.likes-counter');
-          const nameForGood = document.querySelector('.good-name');
-
-          const IDForGood = nameForGood.id;
-          console.log(IDForGood)
-          likesCounter.textContent = likesCounterOnPage;
-
-          
-          likeButton.addEventListener('click', () => {
-              likeButton.classList.add('animate');
-              setTimeout(() => {
-                  likeButton.classList.remove('animate');
-              }, 450); 
-          });
       });
 
       document.addEventListener('DOMContentLoaded', () => {
@@ -133,13 +128,15 @@
       function saveGoodToLocalStorage(ID) {
         const nameForGoodText = document.querySelector('.good-name').textContent;
         const nameForGood = document.querySelector('.like-good-catalog');
+        const imageForGood = document.querySelector('.good-item-original');
         const priceForGood = document.querySelector('.good-price').textContent;
         
         const goodLike = {
             name: nameForGoodText, 
             price: priceForGood, 
             id: ID,
-            option: "Like"
+            option: "Like",
+            src: imageForGood.src
         }
 
         localStorage.setItem(ID, JSON.stringify(goodLike));
@@ -173,11 +170,24 @@
       })
       
       function scrollToCatalog(){
-        event.preventDefault(); // Prevent any default behavior
-        document.getElementById('catalog-title').scrollIntoView({
-          behavior: 'smooth', // Smooth scrolling
-          block: 'start' // Align to the top of the footer
+        event.preventDefault(); 
+        document.getElementById('catalogTitle').scrollIntoView({
+          behavior: 'smooth', 
+          block: 'start' 
         });
+      }
+
+      function getItemsFromStorage(){
+        let listElementsFromStorage = []
+
+        for (let i = 0; i < localStorage.length; i++){
+          let itemFromStorageKey = localStorage.key(i)
+          let itemFromStorageValye = localStorage.getItem(itemFromStorageKey)
+          itemFromStorageValyeParce = JSON.parse(itemFromStorageValye)
+          // console.log(itemFromStorageValyeParce)
+          listElementsFromStorage.push(itemFromStorageValyeParce)
+        }
+        return listElementsFromStorage
       }
 
 
@@ -204,17 +214,17 @@
               <div class="likeDropdownChild">
                 <div class="containerForLike">
                   <h1 href="">вподобайки</h1>
-                  <botton onclick = "toggleDropdown()"><img src="../../static/public/close.png" alt="" class="close-img"></botton>
+                  <botton onclick = "toggleDropdown(); getItemsFromStorage()"><img src="../../static/public/close.png" alt="" class="close-img"></botton>
                 </div>
-                <!-- <div class="button-next-in-like">
-                  ОФОРМИТИ ЗАМОВЛЕННЯ
-                </div> -->
+                <div class="likedGoodscontainer">
+
+                </div>
 
               </div>
               
              </div>
              <div class="cart-container">
-              <a href = "{{url_for('paiment')}}" class="like">
+              <a href = "{{url_for('payment')}}" class="like">
                 <img src="../../static/public/cartIcon.png" alt="" class="cart-img">
               </a>
               <div class="cart-counter"></div>

@@ -75,14 +75,17 @@
     font-size: 100px;
 }
 
+.welcome-page-catalog-container{
+    display: block;
+}
+
 .welcome-page-good-container{
-    width: 500px;
-    height: 720px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    align-items: end;
-    margin-bottom: 100px;/*ВИДАЛИТИ ОБОВЯЗКОВО!!!*/
+    margin-bottom: 100px;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    /* margin-bottom: 100px;ВИДАЛИТИ ОБОВЯЗКОВО!!! */
 }
 
 .main-text-catalog{
@@ -188,12 +191,11 @@
 }
 
 .good-item{
-    width: 400px;
     margin-bottom: 50px;
 }
 
-.options-good-catalog-wrapper{
-    width: 100%;
+.good-catalog-wrapper{
+    /* width: 400px; */
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -201,6 +203,7 @@
     text-transform:uppercase;
     padding: 30px;
     transition: 15s;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .good-name{
@@ -212,16 +215,23 @@
     color: #0000FF; 
 }
 
-
 .good-item-container {
     position: relative;
-    width: 450px;
+
     margin-bottom: 50px;
+    /* display:grid;
+    grid-column: 3; */
+}
+
+.options-good-catalog-flex{
+    width: 100%;
+    display: flex;
+    justify-content: end;
 }
 
 .good-item {
-    width: 100%;
     transition: opacity 0.7s ; 
+    width: 100%;
 }
 
 .good-item-hover {
@@ -231,11 +241,11 @@
     opacity: 0; 
 }
 
-.options-good-catalog-wrapper:hover .good-item-hover {
+.good-catalog-wrapper:hover .good-item-hover {
     opacity: 1;
 }
 
-.options-good-catalog-wrapper:hover .good-item-original {
+.good-catalog-wrapper:hover .good-item-original {
     opacity: 0; 
 }
 

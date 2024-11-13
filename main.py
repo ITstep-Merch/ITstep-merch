@@ -9,6 +9,7 @@ import dotenv
 dotenv.load_dotenv()
 
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
+print(ADMIN_PASSWORD)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
@@ -25,9 +26,10 @@ def home():
     all_goods = db.session.execute(db.select(Good).order_by(Good.id.desc())).scalars().all()
     return render_template('home.html', all_goods=all_goods)
 
-@app.route('/good')
-def good():
-    return render_template('good.html')
+@app.route('/good/<id>')
+def good(id):
+    good = db.session.execute(db.select(Good).where(Good.id == id)).scalar_one()
+    return render_template('good.html', good=good)
 
 @app.route('/payment')
 def payment():
@@ -39,7 +41,8 @@ def admin(password):
         if request.method == "POST":
             new_good = Good(
                 name=request.form.get('name'),
-                img_url=request.form.get('img_url'),
+                img_url_front=request.form.get('img_url_front'),
+                img_url_back=request.form.get('img_url_back'),
                 code=request.form.get('code'),
                 price=request.form.get('price'),
                 color=request.form.get('color'),

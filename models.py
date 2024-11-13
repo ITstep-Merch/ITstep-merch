@@ -15,7 +15,8 @@ class Good(db.Model):
     __tablename__ = "goods"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
-    img_url: Mapped[str] = mapped_column(String, nullable=False)
+    img_url_front: Mapped[str] = mapped_column(String, nullable=False)
+    img_url_back: Mapped[str] = mapped_column(String, nullable=False)
     code: Mapped[int] = mapped_column(Integer, nullable=False)
     price: Mapped[int] = mapped_column(Integer, nullable=False)
     color: Mapped[str] = mapped_column(String, nullable=False)

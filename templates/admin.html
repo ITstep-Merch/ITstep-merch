@@ -5,21 +5,23 @@
   <p class="text-center">{{ message }}</p>
   {% endfor %} {% endif %} {% endwith %}
   <h2>Назва</h2>
-  <label for=""><input type="name" name="name" required="required" /></label>
-  <h2>Картинка</h2>
-  <label for=""><input type="img_url" name="img_url" required="required" /></label>
+  <label for=""><input style="margin-bottom: 40px;" type="name" name="name" required="required" /></label>
+  <h2>Картинка спереду</h2>
+  <label for=""><input style="margin-bottom: 40px;" type="img_url_front" name="img_url_front" required="required" /></label>
+  <h2>Картинка ззаду</h2>
+  <label for=""><input style="margin-bottom: 40px;" type="img_url_back" name="img_url_back" required="required" /></label>
   <h2>Артикул</h2>
-  <label for=""><input type="code" name="code" required="required" /></label>
+  <label for=""><input style="margin-bottom: 40px;" type="code" name="code" required="required" /></label>
   <h2>Ціна</h2>
-  <label for=""><input type="price" name="price" required="required" /></label>
+  <label for=""><input style="margin-bottom: 40px;" type="price" name="price" required="required" /></label>
   <h2>Колір</h2>
-  <label for=""><input name="color" required="required" /></label>
+  <label for=""><input style="margin-bottom: 40px;" name="color" required="required" /></label>
   <h2>Розмір</h2>
-  <label for=""><input type="size" name="size" required="required" /></label>
+  <label for=""><input style="margin-bottom: 40px;" type="size" name="size" required="required" /></label>
   <h2>Опис</h2>
-  <label for=""><input type="description" name="description" required="required" /></label>
+  <label for=""><input style="margin-bottom: 40px;" type="description" name="description" required="required" /></label>
   <h2>Склад та догляд</h2>
-  <label for=""><input type="made_of" name="made_of" required="required" /></label>
+  <label for=""><input style="margin-bottom: 40px;" type="made_of" name="made_of" required="required" /></label>
   <button type="submit">Add good</button>
 </form>
 {% include "./components/footer.html" %}
