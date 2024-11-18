@@ -29,15 +29,17 @@
             <div class="options-good-catalog-flex">
                 <div class="options-good-catalog">
                     <button class="like-good-catalog" id="{{good.id}}" onclick="toggleLike('{{good.id}}'); animateLike('{{good.id}}')"></button>
-                    <button class="cart-good-catalog"> </button>
+                    <button class="cart-good-catalog" id="cart-{{good.id}}" onclick="toggleCart('cart-{{good.id}}'); animateCart('cart-{{good.id}}')"></button>
                 </div>
             </div>
-            <div class="good-item-container">
-                <img class="good-item good-item-original" src="{{good.img_url_front}}" alt="good item"/>
-                <img class="good-item good-item-hover" src="{{good.img_url_back}}" alt="good item"/>
-            </div>
-            <a class="good-name" href = "{{url_for('good', id=good.id)}}">{{good.name}}</a>
-            <div class="good-price">${{good.price}}</div>
+            <a class="good-item-wraper" href = "{{url_for('good', id=good.id)}}">
+                <div class="good-item-container">
+                    <img class="good-item good-item-original" src="{{good.img_url_front}}" alt="good item"/>
+                    <img class="good-item good-item-hover" src="{{good.img_url_back}}" alt="good item"/>
+                </div>
+                <div class="good-name" >{{good.name}}</div>
+                <div class="good-price">${{good.price}}</div>
+            </a>
         </div> 
         {% endfor %}
     </div>

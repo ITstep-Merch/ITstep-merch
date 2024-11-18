@@ -165,6 +165,10 @@
     animation: cartbeat 0.45s;
 }
 
+.carted {
+    background-image: url(./public/cartIcon-hover.png);
+}
+
 .options-good-catalog{
     padding: 20px;
     width: 120px;
@@ -249,6 +253,14 @@
     opacity: 0; 
 }
 
+.good-item-wraper{
+    text-decoration: none;
+    color: inherit; 
+}
+
+.good-item-wraper:hover{
+    cursor: pointer;
+}
 
 
 

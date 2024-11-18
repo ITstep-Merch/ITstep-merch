@@ -18,12 +18,7 @@
     justify-content: space-between;
 }
 
-.like-container{
-    display: flex;
-    align-items: end;
-    height: min-content;
-    transition: 2s;
-}
+
 
 .likes-counter{
     font-size: 17px; 
@@ -31,13 +26,18 @@
     align-items: flex-start; 
     justify-content: center;
     padding-top: 0;
-    height: 35px; /* Фіксована висота для прикладу */
+    height: 35px; 
     margin-top: 0;
 }
 
-.cart-counter{
-    font-size: 20px;
-    margin-bottom: 40px;  
+.carts-counter{
+    font-size: 17px; 
+    display: flex;
+    align-items: flex-start; 
+    justify-content: center;
+    padding-top: 0;
+    height: 35px; 
+    margin-top: 0; 
 }
 
 .logo-img{
@@ -49,6 +49,21 @@
 }
 
 .like-container {
+    display: flex;
+    align-items: end;
+    height: min-content;
+    transition: 2s;
+    position: relative;
+    width: 35px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cart-container {
+    display: flex;
+    align-items: end;
+    height: min-content;
+    transition: 2s;
     position: relative;
     width: 35px;
     display: flex;
@@ -71,21 +86,48 @@
     align-items: center;
 }
 
+.cartDropdownChild {
+    opacity: 0;
+    visibility: hidden;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    position: absolute; 
+    top: 100%; 
+    right: 40%; 
+    z-index: 1; 
+    border-radius: 8px;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .likeDropdownChild a {
-    color: white;
     text-decoration: none;
     display: block;
-    width: 250px;
+}
+
+.cartDropdownChild a {
+    text-decoration: none;
+    display: block;
 }
 
 .likeDropdownChild h1 {
     color: rgb(0, 0, 0);
-    width: 450px;
-    font-size: 20px;
+    text-transform: uppercase;
+}
+
+.cartDropdownChild h1 {
+    color: rgb(0, 0, 0);
     text-transform: uppercase;
 }
 
 .likeDropdownChild.show {
+    opacity: 1;
+    visibility: visible; 
+}
+
+.cartDropdownChild.show {
     opacity: 1;
     visibility: visible; 
 }
@@ -95,7 +137,19 @@
     visibility: hidden; 
 }
 
+.cartDropdownChild.close {
+    opacity: 0;
+    visibility: hidden; 
+}
+
 .containerForLike{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 35px 10px 10px;
+}
+
+.containerForCart{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -109,10 +163,23 @@
 .containerForLike h1{
     padding: 20px;
     margin: 0px;
-    width: 300px;
+    width: 340px;
+    font-size: 24px;
+}
+
+.containerForCart h1{
+    padding: 20px;
+    margin: 0px;
+    width: 340px;
+    font-size: 24px;
 }
 
 .like{
+    border: none;
+    background-color: transparent;
+}
+
+.cart{
     border: none;
     background-color: transparent;
 }
@@ -127,7 +194,17 @@
     margin-bottom: 20px;
 }
 
-.button-next-in-like.animate {
+.button-next-in-cart{
+    text-transform: uppercase;
+    background-color: #0000FF;
+    padding: 20px 45px 20px 45px;
+    border-radius:50px;
+    width: max-content;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.button-next-in-cart.animate {
     animation: cartbeatButtonInLikes 0.45s;
 }
 
@@ -149,6 +226,184 @@
     }
 }
 
+.likedGoodsContainerTitleNotFound{
+    color: #000000;
+    margin-bottom: 40px;
+    font-weight: 510;
+}
+
+.cartedGoodsContainerTitleNotFound{
+    color: #000000;
+    margin-bottom: 40px;
+    font-weight: 510;
+}
+
+.likedGoodsContainerImage{
+    width: 100px;
+}
+
+.cartedGoodsContainerImage{
+    width: 100px;
+}
+
+.likedGoodsContainerImageWraper{
+    width: 150px;
+    height: 250px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px;
+}
+
+.cartedGoodsContainerImageWraper{
+    width: 150px;
+    height: 250px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px;
+}
+
+.likedGoodsContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.cartedGoodsContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.InfoMainTextElement{
+    width: max-content;
+    color: #000000;
+    text-decoration: none;
+    font-weight: bolder;
+}
+
+.likedGoodsContentElement{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cartedGoodsContentElement{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.likedGoodsContainerInfoWraper{
+    width: 200px;
+    margin: 10px;
+}
+
+.cartedGoodsContainerInfoWraper{
+    margin: 10px;
+    width: 200px;
+}
+
+.likedGoodsContainerInfoWraper h2{
+    margin: 0px;
+    font-size: 20px !important;
+
+}
+
+.cartedGoodsContainerInfoWraper h2{
+    margin: 0px;
+    font-size: 20px !important;
+
+}
+
+.InfoMainTextElement{
+    font-size: 24px;
+}
+
+.InfoMainElementWraper{
+    display: flex;
+}
+
+.InfoMainCodeElementLabel{
+    font-size: 15px;
+    font-weight: 300;
+    margin-bottom: 5px;
+}
+
+.InfoMainCodeElementValue{
+    font-size: 15px;
+    font-weight: 450;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.InfoMainSizeElementLabel{
+    font-size: 15px;
+    font-weight: 300;
+    margin-bottom: 5px;
+}
+
+.InfoMainSizeElementValue{
+    font-size: 15px;
+    font-weight: 450;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.InfoColorMainElementLabel{
+    font-size: 15px;
+    font-weight: 300;
+    margin-bottom: 5px;
+}
+
+.InfoColorMainElementValue{
+    font-size: 15px;
+    font-weight: 450;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.InfoPriceColorElement{
+    font-size: 20px;
+}
+
+.InfoElementDeleteButton{
+    border: 0px;
+    background-color: inherit;
+    color: #a4a4a4;
+    margin-top: 10px;
+}
+
+.InfoElementDeleteButton:hover{
+    color: #d41515;
+}
+
+.cartedGoodsContainerButton{
+    background-color: #0000FF;
+    color: #ffffff;
+    border: 0px;
+    padding: 20px 25px 20px 25px;
+    border-radius: 40px;
+    margin: 15px 0px 25px 0px;
+}
+
+@keyframes spinShake {
+    0% { transform: scale(1.1) rotate(0deg); }
+    25% { transform: scale(1.1) rotate(-2deg); }
+    50% { transform: scale(1.1) rotate(2deg); }
+    75% { transform: scale(1.1) rotate(-2deg); }
+    100% { transform: scale(1.1) rotate(0deg); }
+}
+
+.cartedGoodsContainerButton:hover {
+    animation: spinShake 0.25s infinite;
+    transform-origin: center; 
+}
 
 @media (max-width: 768px) {
 

@@ -1,15 +1,18 @@
-from flask import Flask, abort, render_template, redirect, url_for, flash, request
+from flask import Flask, abort, render_template, redirect, url_for, flash, jsonify, request
 from flask_bootstrap import Bootstrap5
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, Good
 from datetime import datetime
 import os
 import dotenv
+import requests
 
 dotenv.load_dotenv()
 
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
-print(ADMIN_PASSWORD)
+
+API_KEY = os.environ.get('NOVA_POSHTA_API_KEY')
+print(API_KEY)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
@@ -30,6 +33,32 @@ def home():
 def good(id):
     good = db.session.execute(db.select(Good).where(Good.id == id)).scalar_one()
     return render_template('good.html', good=good)
+
+@app.route('/get_good/<int:id>')
+def get_good(id):
+    get_good = db.session.execute(db.select(Good).where(Good.id == id)).scalar_one()
+    return jsonify({
+        "id": get_good.id,
+        "name": get_good.name,
+        "price": get_good.price,
+        "src": get_good.img_url_front,
+        "code":get_good.code,
+        "color": get_good.color,
+        "size": get_good.size
+    })
+
+@app.route('/get_good_cart/cart-<int:id>')
+def get_good_cart(id):
+    get_good = db.session.execute(db.select(Good).where(Good.id == id)).scalar_one()
+    return jsonify({
+        "id": get_good.id,
+        "name": get_good.name,
+        "price": get_good.price,
+        "src": get_good.img_url_front,
+        "code":get_good.code,
+        "color": get_good.color,
+        "size": get_good.size
+    })
 
 @app.route('/payment')
 def payment():
@@ -81,6 +110,32 @@ def admin_home(password):
         return render_template('admin.html', password=password)
     else: 
         return abort(403)
+     
+@app.route('/get_warehouses', methods = ["GET", "POST"])
+def get_warehouses():
+    dataFromPOST = request.get_json() 
+    url = "https://api.novaposhta.ua/v2.0/json/"
+    payload = {
+        "apiKey": API_KEY,
+        "modelName": "AddressGeneral",
+        "calledMethod": "getWarehouses",
+        "methodProperties": {
+            "CityName" : "Київ",
+            "Page" : "1",
+            "Limit" : "50",
+            "Language" : "UA",
+        }
+    }
+
+    try:
+        res = requests.post(url, json=payload)
+        res.raise_for_status()
+        res_data = res.json()
+        return jsonify(res_data.get("data", []))
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+
+
 
 
 
