@@ -1,6 +1,6 @@
 {% include "./components/header.html" %}
 <div class="checkout-page">
-    <div class="order-form">
+    <!-- <div class="order-form">
         <h2>ОФОРМЛЕННЯ ЗАМОВЛЕННЯ</h2>
       
         
@@ -15,7 +15,7 @@
             </div>
             <textarea placeholder="Коментар до замовлення"></textarea>
         </form>
-    </div>
+    </div> -->
     <div class="cart-summary">
         <h2>ВАШ КОШИК</h2>
         <div class="cart-item-payment-container">
@@ -25,17 +25,39 @@
        
         <div class="total-price">РАЗОМ &nbsp;<div class="total-price-valye"></div>$</div>
     </div>
-    <div class="delivery-options">
-        <h2>ОБЕРІТЬ СПОСІБ ДОСТАВКИ</h2>
-        <label><input type="checkbox"> Нова Пошта - Відділення</label>
+    <!-- <div class="delivery-options">
+        <div class="logo-text-wrapper">
+            <div class="main-text-wrapper">
+                <h2>ОБЕРІТЬ СПОСІБ ДОСТАВКИ</h2>
+                <h3>Доставляємо, тільки Новою Поштою</h3>
+            </div>
+            <img src="../static/public/nova-post-logo.png" alt="" class="nova-post-logo">
+        </div>
+
+
         <div class="select-group">
-            <select><option>Місто</option></select>
-            <select><option>Відділення</option></select>
+            <div class="select-wrapper">
+                
+                <input list="regions" id="region-input" placeholder="Область" >
+                <datalist id="regions"></datalist>
+                <h1>1. Оберіть область</h1>
+            </div>
+
+            <div class="select-wrapper">
+                
+                <input list="citys" id="city-input" placeholder="Місто" >
+                <datalist id="citys"></datalist>
+                <h1>2. Оберіть місто</h1>
+            </div>
+
+            <div class="select-wrapper">
+                
+                <input list="Warehouses" id="Warehouse-input" placeholder="Відділення" >
+                <datalist id="Warehouses"></datalist>
+                <h1>3. Оберіть відділення</h1>
+            </div>
         </div>
-        <div class="adres-or-poshtomat-chooser">
-            <label><input type="checkbox"> Нова Пошта - Поштомат</label>
-            <label><input type="checkbox"> Нова Пошта - Адресна доставка</label>
-        </div>
+
     </div>
     <div class="payment-options">
         <h2>ОБЕРІТЬ СПОСІБ ОПЛАТИ</h2>
@@ -45,7 +67,8 @@
             <label><input type="checkbox"> Lorem ipsum</label>
         </div>
     </div>
-    <button class="confirm-order-btn">ПІДТВЕРДИТИ ЗАМОВЛЕННЯ</button>
+    <button class="confirm-order-btn">ПІДТВЕРДИТИ ЗАМОВЛЕННЯ</button> -->
+
 </div>
 
 {% include "./components/footer.html" %}

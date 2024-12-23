@@ -111,19 +111,25 @@ def admin_home(password):
     else: 
         return abort(403)
      
-@app.route('/get_warehouses', methods = ["GET", "POST"])
+@app.route('/get_warehouses', methods = ["POST"])
 def get_warehouses():
     dataFromPOST = request.get_json() 
+    city_name = dataFromPOST.get("CityName", "Київ")  # Значення за замовчуванням
+    page = dataFromPOST.get("Page", "1")
+    limit = dataFromPOST.get("Limit", "50")
+    language = dataFromPOST.get("Language", "UA")
+
+    print(dataFromPOST)
     url = "https://api.novaposhta.ua/v2.0/json/"
     payload = {
         "apiKey": API_KEY,
         "modelName": "AddressGeneral",
         "calledMethod": "getWarehouses",
         "methodProperties": {
-            "CityName" : "Київ",
-            "Page" : "1",
-            "Limit" : "50",
-            "Language" : "UA",
+            "CityName" : city_name,
+            "Page" : page,
+            "Limit" : limit,
+            "Language" : language,
         }
     }
 
@@ -134,9 +140,161 @@ def get_warehouses():
         return jsonify(res_data.get("data", []))
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/get_oblast', methods=["GET"])
+def get_oblast():
+    url = "https://api.novaposhta.ua/v2.0/json/"
+    payload = {
+        "apiKey": API_KEY,
+        "modelName": "AddressGeneral",
+        "calledMethod": "getSettlementAreas",
+        "methodProperties": {
+            "Ref" : ""
+        }
+    }
+    # {
+    #     "apiKey": API_KEY,
+    #     "modelName": "AddressGeneral",
+    #     "calledMethod": "getAreas",
+    #     "methodProperties": {   }
+    # }
+    
 
 
+    try:
+        res = requests.post(url, json=payload)
+        res.raise_for_status()
+        res_data = res.json()
+        return jsonify(res_data.get("data", []))
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+    
 
+    
+@app.route('/get_city_in_oblast', methods=["GET"])
+def get_city_in_oblast():
+    RefOblast = request.args.get('RefOblast')
+    InputByUser_City = request.args.get('InputByUser_City')
+    url = "https://api.novaposhta.ua/v2.0/json/"
+    payload =     {
+        "apiKey": API_KEY,
+        "modelName": "AddressGeneral",
+        "calledMethod": "getSettlements",
+        "methodProperties": {
+            "AreaRef": RefOblast,
+            "FindByString" : InputByUser_City,
+            "Limit": "100"
+        }
+    }
+    # {
+    #     "apiKey": API_KEY,
+    #     "modelName": "Address",
+    #     "calledMethod": "getCities",
+    #     "methodProperties": 
+    #     {
+    #         "FindByString": InputByUser_City,
+    #         "AreaRef" : RefOblast  # Додаємо Ref області як фільтр
+    #     }
+    # }
+    # payload = {
+    #     "apiKey": API_KEY,
+    #     "modelName": "Address",
+    #     "calledMethod": "getCities",
+    #     "methodProperties": 
+    #     {
+    #         "FindByString": InputByUser_City,
+    #         "RegionRef": RefOblast  # Додаємо Ref області як фільтр
+    #     }
+    # }
+    
+
+
+    try:
+        res = requests.post(url, json=payload)
+        res.raise_for_status()
+        res_data = res.json()
+
+        return jsonify(res_data.get("data", []))
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+    
+
+@app.route('/get_street_in_city', methods=["GET"])
+def get_street_in_city():
+    RefCity = request.args.get('RefCity')
+    InputByUser_Street = request.args.get('InputByUser_Street')
+
+    url = "https://api.novaposhta.ua/v2.0/json/"
+    payload = {
+        "apiKey": API_KEY,
+        "modelName": "AddressGeneral",
+        "calledMethod": "getStreet",
+        "methodProperties": {
+            "CityRef" : RefCity,
+            "FindByString" : InputByUser_Street,
+            "Limit" : "300"
+        }
+    }
+
+
+    try:
+        res = requests.post(url, json=payload)
+        res.raise_for_status()
+        res_data = res.json()
+        print(res_data)
+        return jsonify(res_data.get("data", []))
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/get_wareHouse_in_city_streetAd', methods=["GET"])
+def get_wareHouse_in_city_streetAd():
+    nameCity = request.args.get('nameCity')
+    InputByUser_House = request.args.get('InputByUser_House')
+    print("nameCity",nameCity)
+    print("InputByUser_House",InputByUser_House)
+
+    url = "https://api.novaposhta.ua/v2.0/json/"
+    # payload = {
+    #     "apiKey": API_KEY,
+    #     "modelName": "AddressGeneral",
+    #     "calledMethod": "getWarehouses",
+    #     "methodProperties": {
+    #         "FindByString" : InputByUser_House,
+    #         "CityName" : nameCity,
+    #         "CityRef" : " ",
+    #         "Page" : "",
+    #         "Limit" : "50",
+    #         "Language" : "UA",
+    #         "TypeOfWarehouseRef" : "",
+    #         "WarehouseId" : ""
+    #     }
+    # }
+
+    payload = {
+        "apiKey": API_KEY,
+        "modelName": "AddressGeneral",
+        "calledMethod": "getWarehouses",
+        "methodProperties": {
+                "FindByString" : InputByUser_House,
+                "CityName" : nameCity,
+                "CityRef" : "",
+                "Page" : "",
+                "Limit" : "20",
+                "Language" : "UA",
+                "TypeOfWarehouseRef" : "",
+                "WarehouseId" : ""
+            }
+    }
+
+
+    try:
+        res = requests.post(url, json=payload)
+        res.raise_for_status()
+        res_data = res.json()
+        print(res_data)
+        return jsonify(res_data.get("data", []))
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500
 
 
 

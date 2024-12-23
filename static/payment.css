@@ -11,32 +11,33 @@ body {
 }
 
 .order-form, .cart-summary, .delivery-options, .payment-options {
-    border: 1px solid #000;
+    border: 2px solid #000;
     padding: 20px;
     background-color: #fff;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Розподіляє простір між елементами */
+    justify-content: space-between;
     gap: 10px;
 }
 
-.order-form, .delivery-options, .payment-options {
+.order-form, .payment-options {
     grid-column: 1 / 2;
     border-radius: 10px;
-    border-color: #5a5a5a92;
+    border-color: rgba(0, 0, 0, 0.252);
+}
+
+.delivery-options {
+    grid-column: 1 / 2;
+    border-radius: 10px;
+    border-color: rgba(0, 0, 0, 0.252);
 }
 
 .cart-summary {
     grid-column: 2 / 3;
     grid-row: 1 / span 3;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 20px;
     padding: 20px;
-    border: 1px solid #000;
+    border: 2px solid rgba(0, 0, 0, 0.252);
     background-color: #fff;
-    border-color: #5a5a5a92;
     border-radius: 10px;
 }
 
@@ -54,7 +55,14 @@ body {
 
 .checkout-page h2 {
     font-size: 18px;
-    margin-bottom: 15px;
+    margin-bottom: 0px;
+}
+
+.checkout-page h3 {
+    font-size: 10px;
+    margin-bottom: 0px;
+    color: #999999;
+    text-transform: uppercase;
 }
 
 .form-group {
@@ -117,3 +125,78 @@ textarea {
     justify-content: space-between;
 }
 
+.nova-post-logo{
+    width: 50px;
+    height: 21.5px;
+    margin-left: 20px;
+}
+
+.logo-text-wrapper{
+    display: flex;
+    width: 100%;
+}
+
+.delivery-options input,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+
+.confirm-order-btn {
+    grid-column: 1 / -1;
+    padding: 15px 30px;
+    background-color: blue;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 10px;
+    font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.confirm-order-btn:hover {
+    background-color: blue;
+    transform: scale(1.03); /* Легке збільшення */
+    box-shadow: 0 6px 25px rgba(19, 74, 255, 0.5); /* Трохи сильніша синя тінь */
+}
+
+.confirm-order-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease-in-out;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: 10px;
+}
+
+.confirm-order-btn:hover::after {
+    transform: translateX(100%);
+}
+
+.select-wrapper h1{
+    font-size: 10px;
+    color: #999999;
+}
+
+.select-wrapper{
+    width: 100%;
+}
+
+.cart-item-payment-container{
+    overflow-y: auto;
+    height: 400px;
+}

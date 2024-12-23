@@ -264,6 +264,7 @@
     align-items: center;
     justify-content: center;
     margin: 15px;
+    border-radius: 10px;
 }
 
 .likedGoodsContainer{
