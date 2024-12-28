@@ -10,6 +10,8 @@ import requests
 dotenv.load_dotenv()
 
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 API_KEY = os.environ.get('NOVA_POSHTA_API_KEY')
 print(API_KEY)
@@ -295,6 +297,61 @@ def get_wareHouse_in_city_streetAd():
         return jsonify(res_data.get("data", []))
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
+    
+
+# Функція для надсилання повідомлення в Telegram
+def send_telegram_message(order_data):
+    goods_list = order_data.get('goodsToBuyTELEGRAM', [])
+    formatted_goods = ""
+    for index, item in enumerate(goods_list, start=1):
+        formatted_goods += (
+            f"      📦 Товар {index}:\n"
+            f"              Назва: {item.get('name', 'Невідомо')}\n"
+            f"              Код: {item.get('code', 'Невідомо')}\n"
+            f"              Розмір: {item.get('size', 'Невідомо')}\n"
+            f"              Колір: {item.get('color', 'Невідомо')}\n"
+            f"              Ціна: {item.get('price', 'Невідомо')}\n\n"
+        )
+    message = (
+        f"🛒 НОВЕ ЗАМОВЛЕННЯ:\n\n"
+        f"👤 Ім'я: {order_data.get('nameTELEGRAM', 'НеНадано, звертайтесь кудись))')}\n"
+        f"👤 Прізвище: {order_data.get('secondNameTELEGRAM', 'НеНадано, звертайтесь кудись))')}\n"
+        f"📧 Електронна адреса: {order_data.get('emailTELEGRAM', 'НеНадано, звертайтесь кудись))')}\n"
+        f"📞 Телефон: {order_data.get('phoneTELEGRAM', 'НеНадано, звертайтесь кудись))')}\n"
+        f"💬 Коментар до замовлення: {order_data.get('commentTELEGRAM', 'НеНадано, звертайтесь кудись))')}\n"
+        f"🌍 Область: {order_data.get('regionTELEGRAM', 'НеНадано, звертайтесь кудись))')}\n"
+        f"🏙️ Місто: {order_data.get('cityTELEGRAM', 'НеНадано, звертайтесь кудись))')}\n"
+        f"🏤 Відділення: {order_data.get('warehouseTELEGRAM', 'НеНадано, звертайтесь кудись))')}\n"
+        f"💳 Оплата: {order_data.get('paymentMethodTELEGRAM', 'НеНадано, звертайтесь кудись))')}\n\n"
+        f"🛍️ Товари:\n{formatted_goods}"
+    )
+
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": message, "parse_mode": "Markdown"}
+
+    response = requests.post(url, json=payload)
+    if response.status_code != 200:
+        print("Error sending message:", response.text)
+    return response.json()
+
+# Ендпоінт для отримання замовлення з сайту
+@app.route("/new_order", methods=["POST"])
+def new_order():
+    try:
+        order_data = request.json
+        if not order_data:
+            return jsonify({"status": "error", "message": "Invalid input data"}), 400
+
+        print("Received order data:", order_data)
+        response = send_telegram_message(order_data)
+        print("Telegram API response:", response)
+        return jsonify({"status": "success", "message": "Order sent to Telegram"})
+    except Exception as e:
+        print("Error:", str(e))
+        return jsonify({"status": "error", "message": str(e)})
+    
+    
+
 
 
 

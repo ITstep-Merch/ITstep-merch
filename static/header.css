@@ -270,15 +270,17 @@
 .likedGoodsContainer{
     display: flex;
     align-items: center;
-    justify-content: center;
     flex-direction: column;
+    overflow-y: auto;
+    max-height: 400px;
 }
 
 .cartedGoodsContainer{
     display: flex;
     align-items: center;
-    justify-content: center;
     flex-direction: column;
+    overflow-y: auto;
+    max-height: 400px;
 }
 
 .InfoMainTextElement{
@@ -401,7 +403,7 @@
     100% { transform: scale(1.1) rotate(0deg); }
 }
 
-.cartedGoodsContainerButton:hover {
+.cartedGoodsContainerButton:not(:disabled):hover {
     animation: spinShake 0.25s infinite;
     transform-origin: center; 
 }
@@ -417,3 +419,4 @@
 @media (min-width: 1024px) and (max-width: 1550px) {
     
 }   
+

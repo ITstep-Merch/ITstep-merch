@@ -1,31 +1,41 @@
 {% include "./components/header.html" %}
 <div class="checkout-page">
-    <!-- <div class="order-form">
+    <div class="order-form">
         <h2>ОФОРМЛЕННЯ ЗАМОВЛЕННЯ</h2>
       
         
         <form>
             <div class="form-group">
-                <input type="text" placeholder="Ім'я">
-                <input type="text" placeholder="Прізвище">
+                <input type="text" class="" id="name-input" placeholder="Ім'я*">
+                <input type="text" class="" id="second-name-input" placeholder="Прізвище*">
             </div>
             <div class="form-group">
-                <input type="email" placeholder="E-Mail">
-                <input type="text" placeholder="Телефон">
+                <input type="email" class="" id="email-input" placeholder="E-Mail*">
+                <input type="text" class="" id="phone-input" placeholder="Телефон*">
             </div>
             <textarea placeholder="Коментар до замовлення"></textarea>
         </form>
+    </div>
+
+    <!-- <div style="border: solid 4px black; height: 400px; width: 400px; overflow-y: auto;">
+        <div style="margin: 30px; background-color: brown; height: 100px;">Product1</div>
+
     </div> -->
+
     <div class="cart-summary">
-        <h2>ВАШ КОШИК</h2>
+        <div style="display: flex;">
+            <h2 id="cart-title">ВАШ КОШИК</h2>
+            <p class="error-message-cart" style="color: red; display: none;">Не обраний розмір!</p>
+        </div>
         <div class="cart-item-payment-container">
 
             
         </div>
        
-        <div class="total-price">РАЗОМ &nbsp;<div class="total-price-valye"></div>$</div>
+        <div class="total-price">РАЗОМ &nbsp;₴<div class="total-price-valye"></div></div>
     </div>
-    <!-- <div class="delivery-options">
+
+    <div class="delivery-options">
         <div class="logo-text-wrapper">
             <div class="main-text-wrapper">
                 <h2>ОБЕРІТЬ СПОСІБ ДОСТАВКИ</h2>
@@ -38,21 +48,21 @@
         <div class="select-group">
             <div class="select-wrapper">
                 
-                <input list="regions" id="region-input" placeholder="Область" >
+                <input list="regions" class="" id="region-input" placeholder="Область*" >
                 <datalist id="regions"></datalist>
                 <h1>1. Оберіть область</h1>
             </div>
 
             <div class="select-wrapper">
                 
-                <input list="citys" id="city-input" placeholder="Місто" >
+                <input list="citys" id="city-input" placeholder="Місто*" >
                 <datalist id="citys"></datalist>
                 <h1>2. Оберіть місто</h1>
             </div>
 
             <div class="select-wrapper">
                 
-                <input list="Warehouses" id="Warehouse-input" placeholder="Відділення" >
+                <input list="Warehouses" id="Warehouse-input" placeholder="Відділення*" >
                 <datalist id="Warehouses"></datalist>
                 <h1>3. Оберіть відділення</h1>
             </div>
@@ -62,12 +72,13 @@
     <div class="payment-options">
         <h2>ОБЕРІТЬ СПОСІБ ОПЛАТИ</h2>
         <div class="adres-or-poshtomat-chooser">
-            <label><input type="checkbox"> Накладний платіж</label>
-            <label><input type="checkbox"> Повна оплата на карту</label>
-            <label><input type="checkbox"> Lorem ipsum</label>
+            <label id="method-checkbox-text"><input id="method-checkbox" type="checkbox"  checked > Накладний платіж*</label>
+            <label><input type="checkbox" disabled> Повна оплата на карту у розробці&#41;</label>
         </div>
     </div>
-    <button class="confirm-order-btn">ПІДТВЕРДИТИ ЗАМОВЛЕННЯ</button> -->
+    <button class="confirm-order-btn" >ПІДТВЕРДИТИ ЗАМОВЛЕННЯ</button>
+
+    
 
 </div>
 

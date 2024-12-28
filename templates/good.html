@@ -8,16 +8,36 @@
   <div class="good-info">
     <div class="good-name">{{good.name}}</div>
     <div class="artcl">Артикул: {{good.code}}</div>
-    <div class="good-price">{{good.price}}$</div>
+    <div class="good-price">₴{{good.price}}</div>
     <div class="color-name">Колір: {{good.color}}</div>
     <!-- <div class="colors-available">...</div> -->
-    <div class="size-name">Розмір: {{good.size}}</div>
-    <!-- <div class="size-available">S M L /*ФІКСИТИ!!*/</div> -->
+    <div class="size-name">Розмір: <label style="width: 125px; display: flex; justify-content: center; align-items: center;">
+      <select id="size" class="size-name-datalist" name="test">
+        <option>Не обрано</option>
+        <option>XS</option>
+        <option>S</option>
+        <option>M</option>
+        <option>L</option>
+        <option>XL</option>
+        <option>XXL</option>
+      </select>
+    </label>  
+    <button class="meter-for-body">
+      <div class="background"></div>
+    </button>
+    </div>
+    
     <div class="description-header">Опис:</div>
-    <div class="description">{{good.description}}</div>
+    <div class="description" style=" 
+      word-wrap: break-word;
+      overflow-wrap: break-word;"
+    >{{good.description}}</div>
     <div class="composition-and-care-header">Склад та доглад:</div>
-    <div class="composition-and-care">{{good.made_of}}</div>
-    <button class="add-to-cart-btn">ДОДАТИ В КОШИК</button>
+    <div class="composition-and-care" style=" 
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    ">{{good.made_of}}</div>
+    <button class="add-to-cart-btn-button" onclick="saveGoodToLocalStorageCart('cart-{{good.id}}')"><a href="/" class="add-to-cart-btn">ДОДАТИ В КОШИК</a></button
   </div>
 </div>
 {% include "./components/footer.html" %}

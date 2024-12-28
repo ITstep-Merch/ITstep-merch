@@ -1,835 +1,1074 @@
 </div>
-       <footer>
-        </footer>
-        <script>
+  <footer></footer>
+  <script>
 
-            function toggleVisibility(activeElement, inactiveElement) {
+    function toggleVisibility(activeElement, inactiveElement) {
+
+      const inactive = document.querySelector(inactiveElement);
+      if (inactive.classList.contains('show')){
+        inactive.classList.add('close'); 
+      }
+
+
+      const active = document.querySelector(activeElement);
+
+      if (inactive.classList.contains('close')) {
+        active.classList.add('show'); 
+      }
+    }
+  
+    let cartCounterOnPage = 0
+    let likeCounter = 0
+  
+    function initializeLikesCounter() {
+      const likesCounter = document.querySelector('.likes-counter');
+      likeCounter = 0;
+
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const item = JSON.parse(localStorage.getItem(key) || "{}");
+
+        if (item.option === "Like") {
+          likeCounter += 1;
+        }
+
+        const idForGood = document.getElementById(key);
+      }
+
+      if (likesCounter) {
+        likesCounter.textContent = likeCounter;
+      }
+    }
+  
+    function initializeCartsCounter() {
+      const cartsCounter = document.querySelector('.carts-counter');
+      cartCounterOnPage = 0;
+
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('cart-')) {
+          const item = JSON.parse(localStorage.getItem(key) || "{}");
+
+          if (item.option === "Cart") {
+            cartCounterOnPage += 1;
+          }
+        }
+
+        const idForGood = document.getElementById(key);
+      }
+
+      if (cartsCounter) {
+        cartsCounter.textContent = cartCounterOnPage;
+      }
+    }
+  
+    function animateLike(ID){
+      initializeLikesCounter()
+      const likeButton = document.querySelector('.like-good-catalog');
+      const likeButtonID = document.getElementById(ID);
         
-              const inactive = document.querySelector(inactiveElement);
-              if (inactive.classList.contains('show')){
-                inactive.classList.add('close'); 
-              }
+        likeButtonID.classList.add('animate');
+        setTimeout(() => {
+          likeButtonID.classList.remove('animate');
+        }, 450); 
+    }
+
+    function animateCart(ID){
+      initializeCartsCounter()
+      const cartButton = document.querySelector('.cart-good-catalog');
+      const cartButtonID = document.getElementById(ID);
         
-        
-              const active = document.querySelector(activeElement);
-        
-              if (inactive.classList.contains('close')) {
-                active.classList.add('show'); 
+      cartButtonID.classList.add('animate');
+        setTimeout(() => {
+          cartButtonID.classList.remove('animate');
+        }, 450); 
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeLikesCounter()
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeCartsCounter()
+    });
+
+    function toggleDropdownLike() {
+      const dropdown = document.querySelector('.likeDropdownChild');
+      if (dropdown.classList.contains('show')) {
+          dropdown.classList.add('close');
+          dropdown.classList.remove('show');
+          // dropdown.classList.remove('close');
+          setTimeout(() => {
+              dropdown.classList.remove('close');
+          }, 300); 
+      } else {
+          dropdown.classList.add('show');
+      }
+    }
+
+    function toggleDropdownCart() {
+      const dropdown = document.querySelector('.cartDropdownChild');
+      if (dropdown.classList.contains('show')) {
+          dropdown.classList.add('close');
+          dropdown.classList.remove('show');
+          setTimeout(() => {
+              dropdown.classList.remove('close');
+          }, 300); 
+      } else {
+          dropdown.classList.add('show');
+      }
+    }
+  
+    async function saveGoodToLocalStorage(ID) {
+
+      const response = await fetch(`/get_good/${ID}`);
+      const goodLikeRes = await response.json();
+
+      let getSize = "Не обрано"
+
+      try {
+        const sizeElement = document.getElementById("size");
+        if (sizeElement) {
+          getSize = sizeElement.value
+        }
+      } catch (error) {
+        console.error("Error getting size element:", error);
+      }
+      
+      const goodLike = {
+          src: goodLikeRes.src,
+          name: goodLikeRes.name, 
+          code: goodLikeRes.code,
+          size: getSize,
+          color: goodLikeRes.color,
+          price: goodLikeRes.price, 
+          id: goodLikeRes.id,
+          option: "Like"
+      }
+
+      localStorage.setItem(ID, JSON.stringify(goodLike));
+
+      initializeLikesCounter()
+      displayLikedItems()
+    }
+  
+        async function saveGoodToLocalStorageCart(ID) {
+          console.log('jjj',ID)
+          
+          const response = await fetch(`/get_good_cart/${ID}`);
+          const goodCartRes = await response.json();
+
+          let getSize = "Не обрано"
+
+          try {
+            const sizeElement = document.getElementById("size");
+            if (sizeElement) {
+              getSize = sizeElement.value
+            }
+          } catch (error) {
+            console.error("Error getting size element:", error);
+          }
+          
+          const goodCart = {
+              src: goodCartRes.src,
+              name: goodCartRes.name, 
+              code: goodCartRes.code,
+              size: getSize,
+              color: goodCartRes.color,
+              price: goodCartRes.price, 
+              id: goodCartRes.id,
+              option: "Cart"
+          }
+  
+          localStorage.setItem(ID, JSON.stringify(goodCart));
+  
+          initializeCartsCounter()
+          displayCartedItems()
+        }
+  
+        function toggleLike(ID){
+          findElementLikeButton = document.getElementById(ID)
+          console.log(ID)
+          const isLiked = findElementLikeButton.classList.contains('liked');
+          findElementLikeButton.classList.toggle('liked')
+          const likesCounter = document.querySelector('.likes-counter');
+  
+          if (isLiked) {
+            localStorage.removeItem(ID)
+            likeCounter -= 1;
+            likesCounter.textContent = likeCounter;
+          } else {
+            saveGoodToLocalStorage(ID);
+          }
+          displayLikedItems()
+        }
+  
+        function toggleCart(ID){   
+  
+            console.log(ID)
+            findElementCartButton = document.getElementById(ID)
+            const isCarted = findElementCartButton.classList.contains('carted');
+            if (window.location.pathname === '/') { 
+              findElementCartButton.classList.toggle('carted')
+            }
+            const cartsCounter = document.querySelector('.carts-counter');
+            if (isCarted) {
+              localStorage.removeItem(ID)
+              cartCounterOnPage -= 1;
+              cartsCounter.textContent = cartCounterOnPage;
+            } else {
+              saveGoodToLocalStorageCart(ID);
+            }
+            displayCartedItems()
+          
+        }
+  
+        function togglePayment(ID){   
+          findElementCartButton = document.getElementById(ID)
+          const cartsCounter = document.querySelector('.carts-counter');
+            localStorage.removeItem(ID)
+            cartCounterOnPage -= 1;
+            cartsCounter.textContent = cartCounterOnPage;
+          
+            initializePaymentPageElement()
+        }
+  
+        document.addEventListener('DOMContentLoaded', () => {
+          displayLikedItems(); 
+        });
+  
+        document.addEventListener('DOMContentLoaded', () => {
+          displayCartedItems(); 
+        });
+  
+        document.addEventListener('DOMContentLoaded', function() {
+          for (let i = 0; i < localStorage.length; i++) {
+            const getKeys = localStorage.key(i);
+            if (!getKeys.startsWith('cart-')) {
+              const item = JSON.parse(localStorage.getItem(getKeys) || "{}");
+              const toLikeAfterReload = document.getElementById(getKeys);
+              if (item.option === "Like") {
+                  toLikeAfterReload.classList.add('liked');
               }
             }
-        
-              let cartCounterOnPage = 0
-              let likeCounter = 0
-        
-              function initializeLikesCounter() {
-                const likesCounter = document.querySelector('.likes-counter');
-                likeCounter = 0;
-        
-                for (let i = 0; i < localStorage.length; i++) {
-                  const key = localStorage.key(i);
-                  const item = JSON.parse(localStorage.getItem(key) || "{}");
-        
-                  if (item.option === "Like") {
-                    likeCounter += 1;
-                  }
-        
-                  const idForGood = document.getElementById(key);
-                }
-        
-                if (likesCounter) {
-                  likesCounter.textContent = likeCounter;
-                }
+          }
+        })
+  
+        document.addEventListener('DOMContentLoaded', function() {
+          for (let i = 0; i < localStorage.length; i++) {
+            const getKeys = localStorage.key(i);
+            if (getKeys.startsWith('cart-')) {
+              const item = JSON.parse(localStorage.getItem(getKeys) || "{}");
+              const toCartAfterReload = document.getElementById(getKeys);
+              if (item.option === "Cart") {
+                    toCartAfterReload.classList.add('carted');
               }
+            }
+          }
+        })
         
-              function initializeCartsCounter() {
-                const cartsCounter = document.querySelector('.carts-counter');
-                cartCounterOnPage = 0;
-        
-                for (let i = 0; i < localStorage.length; i++) {
-                  const key = localStorage.key(i);
-                  if (key.startsWith('cart-')) {
-                    const item = JSON.parse(localStorage.getItem(key) || "{}");
-        
-                    if (item.option === "Cart") {
-                      cartCounterOnPage += 1;
-                    }
-                  }
-        
-                  const idForGood = document.getElementById(key);
-                }
-        
-                if (cartsCounter) {
-                  cartsCounter.textContent = cartCounterOnPage;
-                }
+        function scrollToCatalog(){
+          event.preventDefault(); 
+          document.getElementById('catalogTitle').scrollIntoView({
+            behavior: 'smooth', 
+            block: 'start' 
+          });
+        }
+  
+        function getItemsFromStorage(){
+          let listElementsFromStorage = []
+  
+          for (let i = 0; i < localStorage.length; i++){
+            let itemFromStorageKey = localStorage.key(i)
+            let itemFromStorageValye = localStorage.getItem(itemFromStorageKey)
+            itemFromStorageValyeParce = JSON.parse(itemFromStorageValye)
+            if (itemFromStorageValyeParce.option === "Like"){
+              listElementsFromStorage.push(itemFromStorageValyeParce)
+            }
+          }
+          return listElementsFromStorage
+        }
+  
+        function getItemsFromStorageCart(){
+          let listElementsFromStorageCart = []
+  
+          for (let i = 0; i < localStorage.length; i++){
+            let itemFromStorageKey = localStorage.key(i)
+            if (itemFromStorageKey.startsWith('cart-')) {
+              let itemFromStorageValye = localStorage.getItem(itemFromStorageKey)
+              itemFromStorageValyeParce = JSON.parse(itemFromStorageValye)
+              if (itemFromStorageValyeParce.option === "Cart"){
+                listElementsFromStorageCart.push(itemFromStorageValyeParce)
               }
-        
-              function animateLike(ID){
-                initializeLikesCounter()
-                const likeButton = document.querySelector('.like-good-catalog');
-                const likeButtonID = document.getElementById(ID);
-                  
-                  likeButtonID.classList.add('animate');
-                  setTimeout(() => {
-                    likeButtonID.classList.remove('animate');
-                  }, 450); 
+            }
+          }
+          return listElementsFromStorageCart
+        }
+  
+        function displayLikedItems() {
+          const likedItems = getItemsFromStorage();
+          const likedGoodsContainer = document.querySelector('.likedGoodsContainer');
+  
+          likedGoodsContainer.innerHTML = '';
+  
+          if (likedItems.length === 0) {
+              likedGoodsContainer.innerHTML = '<div class="likedGoodsContainerTitleNotFound">Іди, шось перше но полайкай</div>';
+              return;
+          }
+  
+          const baseGoodUrl = "{{ url_for('good', id=0) }}".replace("0", "");
+  
+          likedItems.forEach(item => {
+  
+            const wrapperImgElement = document.createElement('div');
+            wrapperImgElement.classList.add('likedGoodsContainerImageWraper');
+  
+            const imgElement = document.createElement('img');
+            imgElement.src = item.src; 
+            imgElement.alt = 'liked good image'; 
+            imgElement.classList.add('likedGoodsContainerImage');
+  
+            wrapperImgElement.appendChild(imgElement);
+  
+            const wrapperInfoElement = document.createElement('div');
+            wrapperInfoElement.classList.add('likedGoodsContainerInfoWraper');
+  
+            const InfoMainTextElement = document.createElement('a');
+            InfoMainTextElement.classList.add('InfoMainTextElement');
+            InfoMainTextElement.href = `${baseGoodUrl}${item.id}`;
+            InfoMainTextElement.textContent = item.name;
+            wrapperInfoElement.appendChild(InfoMainTextElement);
+  
+            const wrapperContentElement = document.createElement('div');
+            wrapperContentElement.classList.add('likedGoodsContentElement');
+  
+            wrapperContentElement.appendChild(wrapperImgElement);
+            wrapperContentElement.appendChild(wrapperInfoElement);
+  
+            likedGoodsContainer.appendChild(wrapperContentElement);
+  
+            const InfoMainCodeElement = document.createElement('h2');
+            InfoMainCodeElement.classList.add('InfoMainCodeElement');
+            InfoMainCodeElement.innerHTML = `<div class="InfoMainElementWraper">
+                <span class="InfoMainCodeElementLabel">Артикул:</span> 
+                <span class="InfoMainCodeElementValue">${item.code}</span>
+            </div>`;
+            wrapperInfoElement.appendChild(InfoMainCodeElement);
+  
+            const InfoMainSizeElement = document.createElement('h2');
+            InfoMainSizeElement.classList.add('InfoMainSizeElement');
+            InfoMainSizeElement.innerHTML = `<div class="InfoMainElementWraper">
+                <span class="InfoMainSizeElementLabel">Розмір:</span> 
+                <span class="InfoMainSizeElementValue">${item.size}</span>
+            </div>`;
+            wrapperInfoElement.appendChild(InfoMainSizeElement);
+  
+            const InfoColorMainElement = document.createElement('h2');
+            InfoColorMainElement.classList.add('InfoColorMainElement');
+            InfoColorMainElement.innerHTML = `<div class="InfoMainElementWraper">
+                <span class="InfoColorMainElementLabel">Колір:</span> 
+                <span class="InfoColorMainElementValue">${item.color}</span>
+            </div>`;
+            wrapperInfoElement.appendChild(InfoColorMainElement);
+  
+            const InfoPriceColorElement = document.createElement('h2');
+            InfoPriceColorElement.classList.add('InfoPriceColorElement');
+            InfoPriceColorElement.textContent = "₴" + item.price;
+            wrapperInfoElement.appendChild(InfoPriceColorElement);
+  
+            const InfoElementDeleteButton = document.createElement('button');
+            InfoElementDeleteButton.classList.add('InfoElementDeleteButton');
+            InfoElementDeleteButton.textContent = "Видалити";
+            InfoElementDeleteButton.onclick = function () {
+              toggleLike(item.id);
+            };
+            wrapperInfoElement.appendChild(InfoElementDeleteButton);
+          });
+        }
+  
+        function displayCartedItems() {
+          const cartedItems = getItemsFromStorageCart();
+          const cartedGoodsContainer = document.querySelector('.cartedGoodsContainer');
+          const cartedGoodsContainerButton = document.querySelector('.cartedGoodsContainerButton');
+  
+          cartedGoodsContainer.innerHTML = '';
+  
+          if (cartedItems.length === 0) {
+              cartedGoodsContainer.innerHTML = '<div class="cartedGoodsContainerTitleNotFound">Ше ніц нема в кошику(</div>';
+              cartedGoodsContainerButton.style.display = 'none';
+              return;
+          } else{
+            cartedGoodsContainerButton.style.display = 'block';
+          }
+  
+          const baseGoodUrl = "{{ url_for('good', id=0) }}".replace("0", "");
+  
+  
+  
+          cartedItems.forEach(item => {
+  
+            const wrapperImgElement = document.createElement('div');
+            wrapperImgElement.classList.add('cartedGoodsContainerImageWraper');
+  
+            const imgElement = document.createElement('img');
+            imgElement.src = item.src; 
+            imgElement.alt = 'carted good image'; 
+            imgElement.classList.add('cartedGoodsContainerImage');
+  
+            wrapperImgElement.appendChild(imgElement);
+  
+            const wrapperInfoElement = document.createElement('div');
+            wrapperInfoElement.classList.add('cartedGoodsContainerInfoWraper');
+  
+            const InfoMainTextElement = document.createElement('a');
+            InfoMainTextElement.classList.add('InfoMainTextElement');
+            InfoMainTextElement.href = `${baseGoodUrl}${item.id}`;
+            InfoMainTextElement.textContent = item.name;
+            wrapperInfoElement.appendChild(InfoMainTextElement);
+  
+            const wrapperContentElement = document.createElement('div');
+            wrapperContentElement.classList.add('cartedGoodsContentElement');
+  
+            wrapperContentElement.appendChild(wrapperImgElement);
+            wrapperContentElement.appendChild(wrapperInfoElement);
+  
+            cartedGoodsContainer.appendChild(wrapperContentElement);
+  
+            const InfoMainCodeElement = document.createElement('h2');
+            InfoMainCodeElement.classList.add('InfoMainCodeElement');
+            InfoMainCodeElement.innerHTML = `<div class="InfoMainElementWraper">
+                <span class="InfoMainCodeElementLabel">Артикул:</span> 
+                <span class="InfoMainCodeElementValue">${item.code}</span>
+            </div>`;
+            wrapperInfoElement.appendChild(InfoMainCodeElement);
+  
+            const InfoMainSizeElement = document.createElement('h2');
+            InfoMainSizeElement.classList.add('InfoMainSizeElement');
+            InfoMainSizeElement.innerHTML = `<div class="InfoMainElementWraper">
+                <span class="InfoMainSizeElementLabel">Розмір:</span> 
+                <span class="InfoMainSizeElementValue">${item.size}</span>
+            </div>`;
+            wrapperInfoElement.appendChild(InfoMainSizeElement);
+  
+            const InfoColorMainElement = document.createElement('h2');
+            InfoColorMainElement.classList.add('InfoColorMainElement');
+            InfoColorMainElement.innerHTML = `<div class="InfoMainElementWraper">
+                <span class="InfoColorMainElementLabel">Колір:</span> 
+                <span class="InfoColorMainElementValue">${item.color}</span>
+            </div>`;
+            wrapperInfoElement.appendChild(InfoColorMainElement);
+  
+            const InfoPriceColorElement = document.createElement('h2');
+            InfoPriceColorElement.classList.add('InfoPriceColorElement');
+            InfoPriceColorElement.textContent = "₴" + item.price;
+            wrapperInfoElement.appendChild(InfoPriceColorElement);
+  
+            const InfoElementDeleteButton = document.createElement('button');
+            InfoElementDeleteButton.classList.add('InfoElementDeleteButton');
+            InfoElementDeleteButton.textContent = "Видалити";
+            InfoElementDeleteButton.onclick = function () {
+              const converToWithTo = "cart-" + item.id;
+              toggleCart(converToWithTo);
+            };
+            wrapperInfoElement.appendChild(InfoElementDeleteButton);
+          });
+          
+          if (typeof cartedItems !== 'undefined' && cartedItems.length > 0) {
+            const contentElementButtonWrapper = document.createElement('div');
+            // contentElementButtonWrapper.innerHTML = '<a class="cartedGoodsContainerButton" href ="{{url_for("payment")}}">Оформити бажання</a>';
+            contentElementButtonWrapper.classList.add('cartedGoodsContentElement');
+            cartedGoodsContainer.appendChild(contentElementButtonWrapper);
+          }
+        }
+  
+        function initializePaymentPageElement() {
+          const cartedItems = getItemsFromStorageCart();
+          const cartItemPaymentContainer = document.querySelector('.cart-item-payment-container');
+  
+          cartItemPaymentContainer.innerHTML = '';
+  
+          const baseGoodUrl = "{{ url_for('good', id=0) }}".replace("0", "");
+  
+          cartedItems.forEach(item => {
+  
+            const wrapperImgElement = document.createElement('div');
+            wrapperImgElement.classList.add('cartedGoodsContainerImageWraper');
+  
+            const imgElement = document.createElement('img');
+            imgElement.src = item.src; 
+            imgElement.alt = 'carted good image'; 
+            imgElement.classList.add('cartedGoodsContainerImage');
+  
+            wrapperImgElement.appendChild(imgElement);
+  
+            const wrapperInfoElement = document.createElement('div');
+            wrapperInfoElement.classList.add('cartedGoodsContainerInfoWraper');
+  
+            const InfoMainTextElement = document.createElement('a');
+            InfoMainTextElement.classList.add('InfoMainTextElement');
+            InfoMainTextElement.href = `${baseGoodUrl}${item.id}`;
+            InfoMainTextElement.textContent = item.name;
+            wrapperInfoElement.appendChild(InfoMainTextElement);
+  
+            const wrapperContentElement = document.createElement('div');
+            wrapperContentElement.classList.add('cartedGoodsContentElement');
+            console.log(item)
+            wrapperContentElement.id = `cart-${item.id}`
+  
+            wrapperContentElement.appendChild(wrapperImgElement);
+            wrapperContentElement.appendChild(wrapperInfoElement);
+  
+            cartItemPaymentContainer.appendChild(wrapperContentElement);
+  
+            const InfoMainCodeElement = document.createElement('h2');
+            InfoMainCodeElement.classList.add('InfoMainCodeElement');
+            InfoMainCodeElement.innerHTML = `<div class="InfoMainElementWraper">
+                <span class="InfoMainCodeElementLabel">Артикул:</span> 
+                <span class="InfoMainCodeElementValue">${item.code}</span>
+            </div>`;
+            wrapperInfoElement.appendChild(InfoMainCodeElement);
+  
+            const InfoMainSizeElement = document.createElement('h2');
+            InfoMainSizeElement.classList.add('InfoMainSizeElement');
+            InfoMainSizeElement.innerHTML = `<div class="InfoMainElementWraper">
+                <span class="InfoMainSizeElementLabel">Розмір:</span> 
+                <span class="InfoMainSizeElementValue">${item.size}</span>
+            </div>`;
+            wrapperInfoElement.appendChild(InfoMainSizeElement);
+  
+            const InfoColorMainElement = document.createElement('h2');
+            InfoColorMainElement.classList.add('InfoColorMainElement');
+            InfoColorMainElement.innerHTML = `<div class="InfoMainElementWraper">
+                <span class="InfoColorMainElementLabel">Колір:</span> 
+                <span class="InfoColorMainElementValue">${item.color}</span>
+            </div>`;
+            wrapperInfoElement.appendChild(InfoColorMainElement);
+  
+            const InfoPriceColorElement = document.createElement('h2');
+            InfoPriceColorElement.classList.add('InfoPriceColorElement');
+            InfoPriceColorElement.textContent = "₴" + item.price;
+            wrapperInfoElement.appendChild(InfoPriceColorElement);
+  
+            const InfoElementDeleteButton = document.createElement('button');
+            InfoElementDeleteButton.classList.add('InfoElementDeleteButton');
+            InfoElementDeleteButton.textContent = "Видалити";
+            InfoElementDeleteButton.onclick = function () {
+              const converToWithTo = "cart-" + item.id;
+              togglePayment(converToWithTo);
+            };
+            wrapperInfoElement.appendChild(InfoElementDeleteButton);
+          });
+        }
+  
+        if (window.location.pathname.includes('payment')) {
+          document.addEventListener('DOMContentLoaded', initializePaymentPageElement);
+        }
+  
+        document.addEventListener('DOMContentLoaded', function() {
+          list = getItemsFromStorageCart()
+          const totalPriceValye = document.querySelector('.total-price-valye');
+  
+          totalPrice = 0;
+          
+          list.forEach(item => {
+            totalPrice += item.price
+          })
+          totalPriceValye.innerHTML = totalPrice;
+        })
+  
+        let listOfOblasts = {}
+        async function getOblast() {
+          try {
+            const response = await fetch('/get_oblast');
+            if (!response.ok) {
+                throw new Error('Failed to fetch oblast data');
+            }
+  
+            const getOblast = await response.json();
+            console.log("dada", getOblast);
+  
+            getOblast.forEach(item => {
+              listOfOblasts[item.Description] = item.Ref
+            })
+  
+            console.log("listOfOblasts", listOfOblasts);
+            return listOfOblasts
+          } catch (error) {
+            console.error("Error fetching oblast data:", error);
+          }
+        }
+  
+        async function populateRegions() {
+          const regions = await getOblast();
+  
+          const dataListOnPage = document.getElementById('regions');
+  
+          for (const regionName in regions) {
+            const option = document.createElement('option');
+            option.value = regionName;
+            option.dataset.ref = regions[regionName];
+            dataListOnPage.appendChild(option);
+          }
+        }
+  
+        populateRegions();
+  
+        let listOfCityInOblast = {}
+        async function getCityInOblast(RefOblast, InputByUser_City) {
+          console.log("RefOblast",RefOblast)
+          console.log("InputByUser_City",InputByUser_City)
+          try {
+              const response = await fetch(`/get_city_in_oblast?RefOblast=${RefOblast}&InputByUser_City=${InputByUser_City}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json'
               }
-        
-              function animateCart(ID){
-                initializeCartsCounter()
-                const cartButton = document.querySelector('.cart-good-catalog');
-                const cartButtonID = document.getElementById(ID);
-                  
-                cartButtonID.classList.add('animate');
-                  setTimeout(() => {
-                    cartButtonID.classList.remove('animate');
-                  }, 450); 
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch city data');
+            }
+  
+            const getCityInOblast = await response.json();
+            console.log("dafa", getCityInOblast);
+  
+            getCityInOblast.forEach(item => {
+              listOfCityInOblast[item.Description] = item.Ref
+            })
+  
+            console.log("listOfCityInOblast", listOfCityInOblast);
+            return listOfCityInOblast
+          } catch (error) {
+            console.error("Error fetching oblast data:", error);
+          }
+        }
+  
+        async function populateCitys(RefOblast, InputByUser_City) {
+          const citys = await getCityInOblast(RefOblast, InputByUser_City);
+          const dataListOnPage = document.getElementById('citys');
+          
+          const existingOptions = new Set(
+            Array.from(dataListOnPage.options).map(option => option.value)
+          );
+
+          for (const citysName in citys) {
+            if (!existingOptions.has(citysName)) { // Перевіряємо, чи міста ще немає в списку
+              const option = document.createElement('option');
+              option.value = citysName;
+              option.dataset.ref = citys[citysName];
+              dataListOnPage.appendChild(option);
+            }
+          }
+        }
+
+  
+
+          const regionInput = document.getElementById('region-input');
+          const cityInput = document.getElementById('city-input');
+          let RefOblast = 0;
+
+          regionInput.addEventListener('input', function() {
+              const selectedRegion = regionInput.value;
+              const selectedCity = cityInput.value;
+              console.log('Обрана область:', selectedRegion);
+              RefOblast = listOfOblasts[selectedRegion]
+              InputByUser_City = selectedCity
+              console.log('Обране місто:', selectedCity);
+              console.log("RefOblast",RefOblast)
+              if (RefOblast) {
+                  populateCitys(RefOblast, InputByUser_City);
               }
-        
-              document.addEventListener('DOMContentLoaded', () => {
-                  initializeLikesCounter()
-              });
-        
-              document.addEventListener('DOMContentLoaded', () => {
-                  initializeCartsCounter()
-              });
-        
-              function toggleDropdownLike() {
-                const dropdown = document.querySelector('.likeDropdownChild');
-                if (dropdown.classList.contains('show')) {
-                    dropdown.classList.add('close');
-                    dropdown.classList.remove('show');
-                    // dropdown.classList.remove('close');
-                    setTimeout(() => {
-                        dropdown.classList.remove('close');
-                    }, 300); 
-                } else {
-                    dropdown.classList.add('show');
-                }
+          });
+
+          cityInput.addEventListener('input', function() {
+              const selectedRegion = regionInput.value;
+              const selectedCity = cityInput.value;
+              RefOblast = listOfOblasts[selectedRegion]
+              InputByUser_City = selectedCity
+              if (RefOblast) {
+                  InputByUser_House = " ";
+                  const cityInput = document.getElementById('city-input');
+                  nameCity = InputByUser_City
+                  populateCitys(RefOblast, InputByUser_City);
+                  // populateStreets(RefCity, InputByUser_Street);
+                  populateHouses(nameCity, InputByUser_House);
               }
-        
-              function toggleDropdownCart() {
-                const dropdown = document.querySelector('.cartDropdownChild');
-                if (dropdown.classList.contains('show')) {
-                    dropdown.classList.add('close');
-                    dropdown.classList.remove('show');
-                    setTimeout(() => {
-                        dropdown.classList.remove('close');
-                    }, 300); 
-                } else {
-                    dropdown.classList.add('show');
-                }
+          });
+
+
+
+
+
+
+          let listOfStreetsInCity = {}
+        async function getStreetInCity(RefCity, InputByUser_Street) {
+          console.log("RefCity",RefCity)
+          console.log("InputByUser_Street",InputByUser_Street)
+          try {
+              const response = await fetch(`/get_street_in_city?RefCity=${RefCity}&InputByUser_Street=${InputByUser_Street}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json'
               }
-        
-              async function saveGoodToLocalStorage(ID) {
-        
-                const response = await fetch(`/get_good/${ID}`);
-                const goodLikeRes = await response.json();
-                
-                const goodLike = {
-                    src: goodLikeRes.src,
-                    name: goodLikeRes.name, 
-                    code: goodLikeRes.code,
-                    size: goodLikeRes.size,
-                    color: goodLikeRes.color,
-                    price: goodLikeRes.price, 
-                    id: goodLikeRes.id,
-                    option: "Like"
-                }
-        
-                localStorage.setItem(ID, JSON.stringify(goodLike));
-        
-                initializeLikesCounter()
-                displayLikedItems()
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch city data');
+            }
+  
+            const getStreetInCity = await response.json();
+            console.log("daLa", getStreetInCity);
+  
+            getStreetInCity.forEach(item => {
+              listOfStreetsInCity[item.Description] = item.Ref
+            })
+  
+            console.log("listOfStreetsInCity", listOfStreetsInCity);
+            return listOfStreetsInCity
+          } catch (error) {
+            console.error("Error fetching oblast data:", error);
+          }
+        }
+  
+        async function populateStreets(RefCity, InputByUser_Street) {
+          const streets = await getStreetInCity(RefCity, InputByUser_Street);
+          const dataListOnPage = document.getElementById('streets');
+          
+          const existingOptions = new Set(
+            Array.from(dataListOnPage.options).map(option => option.value)
+          );
+
+          dataListOnPage.innerHTML = "";
+
+          for (const streetsName in streets) {
+            if (!existingOptions.has(streetsName)) {
+              const option = document.createElement('option');
+              option.value = streetsName;
+              option.dataset.ref = streets[streetsName];
+              dataListOnPage.appendChild(option);
+            }
+          }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+          const streetInput = document.getElementById('street-input');
+          let RefCity = 0;
+
+          streetInput.addEventListener('input', function() {
+            const selectedCity = cityInput.value;
+            const selectedStreet = streetInput.value;
+            console.log('Обрана вулиця:', selectedStreet);
+            RefCity = listOfCityInOblast[selectedCity];
+            InputByUser_Street = selectedStreet;
+            console.log('Обране місто (RefCity):', RefCity);
+            console.log("RefCity", RefCity);
+            if (RefCity) {
+                populateStreets(RefCity, InputByUser_Street);
+            }
+          });
+        });
+
+
+
+
+
+
+          
+        async function getHousesInCity(nameCity, InputByUser_House) {
+          console.log("nameCity",nameCity)
+          console.log("InputByUser_Street",InputByUser_House)
+          try {
+              const response = await fetch(`/get_wareHouse_in_city_streetAd?nameCity=${nameCity}&InputByUser_House=${InputByUser_House}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json'
               }
-        
-              async function saveGoodToLocalStorageCart(ID) {
-                console.log('jjj',ID)
-        
-                const response = await fetch(`/get_good_cart/${ID}`);
-                const goodCartRes = await response.json();
-        
-                const goodCart = {
-                    src: goodCartRes.src,
-                    name: goodCartRes.name, 
-                    code: goodCartRes.code,
-                    size: goodCartRes.size,
-                    color: goodCartRes.color,
-                    price: goodCartRes.price, 
-                    id: goodCartRes.id,
-                    option: "Cart"
-                }
-        
-                localStorage.setItem(ID, JSON.stringify(goodCart));
-        
-                initializeCartsCounter()
-                displayCartedItems()
-              }
-        
-              function toggleLike(ID){
-                findElementLikeButton = document.getElementById(ID)
-                console.log(ID)
-                const isLiked = findElementLikeButton.classList.contains('liked');
-                findElementLikeButton.classList.toggle('liked')
-                const likesCounter = document.querySelector('.likes-counter');
-        
-                if (isLiked) {
-                  localStorage.removeItem(ID)
-                  likeCounter -= 1;
-                  likesCounter.textContent = likeCounter;
-                } else {
-                  saveGoodToLocalStorage(ID);
-                }
-                displayLikedItems()
-              }
-        
-              function toggleCart(ID){   
-        
-                  console.log(ID)
-                  findElementCartButton = document.getElementById(ID)
-                  const isCarted = findElementCartButton.classList.contains('carted');
-                  if (window.location.pathname === '/') { 
-                    findElementCartButton.classList.toggle('carted')
-                  }
-                  const cartsCounter = document.querySelector('.carts-counter');
-                  if (isCarted) {
-                    localStorage.removeItem(ID)
-                    cartCounterOnPage -= 1;
-                    cartsCounter.textContent = cartCounterOnPage;
-                  } else {
-                    saveGoodToLocalStorageCart(ID);
-                  }
-                  displayCartedItems()
-                
-              }
-        
-              function togglePayment(ID){   
-                findElementCartButton = document.getElementById(ID)
-                const cartsCounter = document.querySelector('.carts-counter');
-                  localStorage.removeItem(ID)
-                  cartCounterOnPage -= 1;
-                  cartsCounter.textContent = cartCounterOnPage;
-                
-                  initializePaymentPageElement()
-              }
-        
-              document.addEventListener('DOMContentLoaded', () => {
-                displayLikedItems(); 
-              });
-        
-              document.addEventListener('DOMContentLoaded', () => {
-                displayCartedItems(); 
-              });
-        
-              document.addEventListener('DOMContentLoaded', function() {
-                for (let i = 0; i < localStorage.length; i++) {
-                  const getKeys = localStorage.key(i);
-                  if (!getKeys.startsWith('cart-')) {
-                    const item = JSON.parse(localStorage.getItem(getKeys) || "{}");
-                    const toLikeAfterReload = document.getElementById(getKeys);
-                    if (item.option === "Like") {
-                        toLikeAfterReload.classList.add('liked');
-                    }
-                  }
-                }
-              })
-        
-              document.addEventListener('DOMContentLoaded', function() {
-                for (let i = 0; i < localStorage.length; i++) {
-                  const getKeys = localStorage.key(i);
-                  if (getKeys.startsWith('cart-')) {
-                    const item = JSON.parse(localStorage.getItem(getKeys) || "{}");
-                    const toCartAfterReload = document.getElementById(getKeys);
-                    if (item.option === "Cart") {
-                          toCartAfterReload.classList.add('carted');
-                    }
-                  }
-                }
-              })
-              
-              function scrollToCatalog(){
-                event.preventDefault(); 
-                document.getElementById('catalogTitle').scrollIntoView({
-                  behavior: 'smooth', 
-                  block: 'start' 
-                });
-              }
-        
-              function getItemsFromStorage(){
-                let listElementsFromStorage = []
-        
-                for (let i = 0; i < localStorage.length; i++){
-                  let itemFromStorageKey = localStorage.key(i)
-                  let itemFromStorageValye = localStorage.getItem(itemFromStorageKey)
-                  itemFromStorageValyeParce = JSON.parse(itemFromStorageValye)
-                  if (itemFromStorageValyeParce.option === "Like"){
-                    listElementsFromStorage.push(itemFromStorageValyeParce)
-                  }
-                }
-                return listElementsFromStorage
-              }
-        
-              function getItemsFromStorageCart(){
-                let listElementsFromStorageCart = []
-        
-                for (let i = 0; i < localStorage.length; i++){
-                  let itemFromStorageKey = localStorage.key(i)
-                  if (itemFromStorageKey.startsWith('cart-')) {
-                    let itemFromStorageValye = localStorage.getItem(itemFromStorageKey)
-                    itemFromStorageValyeParce = JSON.parse(itemFromStorageValye)
-                    if (itemFromStorageValyeParce.option === "Cart"){
-                      listElementsFromStorageCart.push(itemFromStorageValyeParce)
-                    }
-                  }
-                }
-                return listElementsFromStorageCart
-              }
-        
-              function displayLikedItems() {
-                const likedItems = getItemsFromStorage();
-                const likedGoodsContainer = document.querySelector('.likedGoodsContainer');
-        
-                likedGoodsContainer.innerHTML = '';
-        
-                if (likedItems.length === 0) {
-                    likedGoodsContainer.innerHTML = '<div class="likedGoodsContainerTitleNotFound">Іди, шось перше но полайкай</div>';
-                    return;
-                }
-        
-                const baseGoodUrl = "{{ url_for('good', id=0) }}".replace("0", "");
-        
-                likedItems.forEach(item => {
-        
-                  const wrapperImgElement = document.createElement('div');
-                  wrapperImgElement.classList.add('likedGoodsContainerImageWraper');
-        
-                  const imgElement = document.createElement('img');
-                  imgElement.src = item.src; 
-                  imgElement.alt = 'liked good image'; 
-                  imgElement.classList.add('likedGoodsContainerImage');
-        
-                  wrapperImgElement.appendChild(imgElement);
-        
-                  const wrapperInfoElement = document.createElement('div');
-                  wrapperInfoElement.classList.add('likedGoodsContainerInfoWraper');
-        
-                  const InfoMainTextElement = document.createElement('a');
-                  InfoMainTextElement.classList.add('InfoMainTextElement');
-                  InfoMainTextElement.href = `${baseGoodUrl}${item.id}`;
-                  InfoMainTextElement.textContent = item.name;
-                  wrapperInfoElement.appendChild(InfoMainTextElement);
-        
-                  const wrapperContentElement = document.createElement('div');
-                  wrapperContentElement.classList.add('likedGoodsContentElement');
-        
-                  wrapperContentElement.appendChild(wrapperImgElement);
-                  wrapperContentElement.appendChild(wrapperInfoElement);
-        
-                  likedGoodsContainer.appendChild(wrapperContentElement);
-        
-                  const InfoMainCodeElement = document.createElement('h2');
-                  InfoMainCodeElement.classList.add('InfoMainCodeElement');
-                  InfoMainCodeElement.innerHTML = `<div class="InfoMainElementWraper">
-                      <span class="InfoMainCodeElementLabel">Артикул:</span> 
-                      <span class="InfoMainCodeElementValue">${item.code}</span>
-                  </div>`;
-                  wrapperInfoElement.appendChild(InfoMainCodeElement);
-        
-                  const InfoMainSizeElement = document.createElement('h2');
-                  InfoMainSizeElement.classList.add('InfoMainSizeElement');
-                  InfoMainSizeElement.innerHTML = `<div class="InfoMainElementWraper">
-                      <span class="InfoMainSizeElementLabel">Розмір:</span> 
-                      <span class="InfoMainSizeElementValue">${item.size}</span>
-                  </div>`;
-                  wrapperInfoElement.appendChild(InfoMainSizeElement);
-        
-                  const InfoColorMainElement = document.createElement('h2');
-                  InfoColorMainElement.classList.add('InfoColorMainElement');
-                  InfoColorMainElement.innerHTML = `<div class="InfoMainElementWraper">
-                      <span class="InfoColorMainElementLabel">Колір:</span> 
-                      <span class="InfoColorMainElementValue">${item.color}</span>
-                  </div>`;
-                  wrapperInfoElement.appendChild(InfoColorMainElement);
-        
-                  const InfoPriceColorElement = document.createElement('h2');
-                  InfoPriceColorElement.classList.add('InfoPriceColorElement');
-                  InfoPriceColorElement.textContent = "$" + item.price;
-                  wrapperInfoElement.appendChild(InfoPriceColorElement);
-        
-                  const InfoElementDeleteButton = document.createElement('button');
-                  InfoElementDeleteButton.classList.add('InfoElementDeleteButton');
-                  InfoElementDeleteButton.textContent = "Видалити";
-                  InfoElementDeleteButton.onclick = function () {
-                    toggleLike(item.id);
-                  };
-                  wrapperInfoElement.appendChild(InfoElementDeleteButton);
-                });
-              }
-        
-              function displayCartedItems() {
-                const cartedItems = getItemsFromStorageCart();
-                const cartedGoodsContainer = document.querySelector('.cartedGoodsContainer');
-        
-                cartedGoodsContainer.innerHTML = '';
-        
-                if (cartedItems.length === 0) {
-                    cartedGoodsContainer.innerHTML = '<div class="cartedGoodsContainerTitleNotFound">Ше ніц нема в кошику(</div>';
-                    return;
-                }
-        
-                const baseGoodUrl = "{{ url_for('good', id=0) }}".replace("0", "");
-        
-        
-        
-                cartedItems.forEach(item => {
-        
-                  const wrapperImgElement = document.createElement('div');
-                  wrapperImgElement.classList.add('cartedGoodsContainerImageWraper');
-        
-                  const imgElement = document.createElement('img');
-                  imgElement.src = item.src; 
-                  imgElement.alt = 'carted good image'; 
-                  imgElement.classList.add('cartedGoodsContainerImage');
-        
-                  wrapperImgElement.appendChild(imgElement);
-        
-                  const wrapperInfoElement = document.createElement('div');
-                  wrapperInfoElement.classList.add('cartedGoodsContainerInfoWraper');
-        
-                  const InfoMainTextElement = document.createElement('a');
-                  InfoMainTextElement.classList.add('InfoMainTextElement');
-                  InfoMainTextElement.href = `${baseGoodUrl}${item.id}`;
-                  InfoMainTextElement.textContent = item.name;
-                  wrapperInfoElement.appendChild(InfoMainTextElement);
-        
-                  const wrapperContentElement = document.createElement('div');
-                  wrapperContentElement.classList.add('cartedGoodsContentElement');
-        
-                  wrapperContentElement.appendChild(wrapperImgElement);
-                  wrapperContentElement.appendChild(wrapperInfoElement);
-        
-                  cartedGoodsContainer.appendChild(wrapperContentElement);
-        
-                  const InfoMainCodeElement = document.createElement('h2');
-                  InfoMainCodeElement.classList.add('InfoMainCodeElement');
-                  InfoMainCodeElement.innerHTML = `<div class="InfoMainElementWraper">
-                      <span class="InfoMainCodeElementLabel">Артикул:</span> 
-                      <span class="InfoMainCodeElementValue">${item.code}</span>
-                  </div>`;
-                  wrapperInfoElement.appendChild(InfoMainCodeElement);
-        
-                  const InfoMainSizeElement = document.createElement('h2');
-                  InfoMainSizeElement.classList.add('InfoMainSizeElement');
-                  InfoMainSizeElement.innerHTML = `<div class="InfoMainElementWraper">
-                      <span class="InfoMainSizeElementLabel">Розмір:</span> 
-                      <span class="InfoMainSizeElementValue">${item.size}</span>
-                  </div>`;
-                  wrapperInfoElement.appendChild(InfoMainSizeElement);
-        
-                  const InfoColorMainElement = document.createElement('h2');
-                  InfoColorMainElement.classList.add('InfoColorMainElement');
-                  InfoColorMainElement.innerHTML = `<div class="InfoMainElementWraper">
-                      <span class="InfoColorMainElementLabel">Колір:</span> 
-                      <span class="InfoColorMainElementValue">${item.color}</span>
-                  </div>`;
-                  wrapperInfoElement.appendChild(InfoColorMainElement);
-        
-                  const InfoPriceColorElement = document.createElement('h2');
-                  InfoPriceColorElement.classList.add('InfoPriceColorElement');
-                  InfoPriceColorElement.textContent = "$" + item.price;
-                  wrapperInfoElement.appendChild(InfoPriceColorElement);
-        
-                  const InfoElementDeleteButton = document.createElement('button');
-                  InfoElementDeleteButton.classList.add('InfoElementDeleteButton');
-                  InfoElementDeleteButton.textContent = "Видалити";
-                  InfoElementDeleteButton.onclick = function () {
-                    const converToWithTo = "cart-" + item.id;
-                    toggleCart(converToWithTo);
-                  };
-                  wrapperInfoElement.appendChild(InfoElementDeleteButton);
-                });
-                
-                if (typeof cartedItems !== 'undefined' && cartedItems.length > 0) {
-                  const contentElementButtonWrapper = document.createElement('div');
-                  contentElementButtonWrapper.innerHTML = '<a class="cartedGoodsContainerButton" href ="{{url_for("payment")}}">Оформити бажання</a>';
-                  contentElementButtonWrapper.classList.add('cartedGoodsContentElement');
-                  cartedGoodsContainer.appendChild(contentElementButtonWrapper);
-                }
-              }
-        
-              function initializePaymentPageElement() {
-                const cartedItems = getItemsFromStorageCart();
-                const cartItemPaymentContainer = document.querySelector('.cart-item-payment-container');
-        
-                cartItemPaymentContainer.innerHTML = '';
-        
-                const baseGoodUrl = "{{ url_for('good', id=0) }}".replace("0", "");
-        
-                cartedItems.forEach(item => {
-        
-                  const wrapperImgElement = document.createElement('div');
-                  wrapperImgElement.classList.add('cartedGoodsContainerImageWraper');
-        
-                  const imgElement = document.createElement('img');
-                  imgElement.src = item.src; 
-                  imgElement.alt = 'carted good image'; 
-                  imgElement.classList.add('cartedGoodsContainerImage');
-        
-                  wrapperImgElement.appendChild(imgElement);
-        
-                  const wrapperInfoElement = document.createElement('div');
-                  wrapperInfoElement.classList.add('cartedGoodsContainerInfoWraper');
-        
-                  const InfoMainTextElement = document.createElement('a');
-                  InfoMainTextElement.classList.add('InfoMainTextElement');
-                  InfoMainTextElement.href = `${baseGoodUrl}${item.id}`;
-                  InfoMainTextElement.textContent = item.name;
-                  wrapperInfoElement.appendChild(InfoMainTextElement);
-        
-                  const wrapperContentElement = document.createElement('div');
-                  wrapperContentElement.classList.add('cartedGoodsContentElement');
-                  console.log(item)
-                  wrapperContentElement.id = `cart-${item.id}`
-        
-                  wrapperContentElement.appendChild(wrapperImgElement);
-                  wrapperContentElement.appendChild(wrapperInfoElement);
-        
-                  cartItemPaymentContainer.appendChild(wrapperContentElement);
-        
-                  const InfoMainCodeElement = document.createElement('h2');
-                  InfoMainCodeElement.classList.add('InfoMainCodeElement');
-                  InfoMainCodeElement.innerHTML = `<div class="InfoMainElementWraper">
-                      <span class="InfoMainCodeElementLabel">Артикул:</span> 
-                      <span class="InfoMainCodeElementValue">${item.code}</span>
-                  </div>`;
-                  wrapperInfoElement.appendChild(InfoMainCodeElement);
-        
-                  const InfoMainSizeElement = document.createElement('h2');
-                  InfoMainSizeElement.classList.add('InfoMainSizeElement');
-                  InfoMainSizeElement.innerHTML = `<div class="InfoMainElementWraper">
-                      <span class="InfoMainSizeElementLabel">Розмір:</span> 
-                      <span class="InfoMainSizeElementValue">${item.size}</span>
-                  </div>`;
-                  wrapperInfoElement.appendChild(InfoMainSizeElement);
-        
-                  const InfoColorMainElement = document.createElement('h2');
-                  InfoColorMainElement.classList.add('InfoColorMainElement');
-                  InfoColorMainElement.innerHTML = `<div class="InfoMainElementWraper">
-                      <span class="InfoColorMainElementLabel">Колір:</span> 
-                      <span class="InfoColorMainElementValue">${item.color}</span>
-                  </div>`;
-                  wrapperInfoElement.appendChild(InfoColorMainElement);
-        
-                  const InfoPriceColorElement = document.createElement('h2');
-                  InfoPriceColorElement.classList.add('InfoPriceColorElement');
-                  InfoPriceColorElement.textContent = "$" + item.price;
-                  wrapperInfoElement.appendChild(InfoPriceColorElement);
-        
-                  const InfoElementDeleteButton = document.createElement('button');
-                  InfoElementDeleteButton.classList.add('InfoElementDeleteButton');
-                  InfoElementDeleteButton.textContent = "Видалити";
-                  InfoElementDeleteButton.onclick = function () {
-                    const converToWithTo = "cart-" + item.id;
-                    togglePayment(converToWithTo);
-                  };
-                  wrapperInfoElement.appendChild(InfoElementDeleteButton);
-                });
-              }
-        
-              if (window.location.pathname.includes('payment')) {
-                document.addEventListener('DOMContentLoaded', initializePaymentPageElement);
-              }
-        
-              document.addEventListener('DOMContentLoaded', function() {
-                list = getItemsFromStorageCart()
-                const totalPriceValye = document.querySelector('.total-price-valye');
-        
-                totalPrice = 0;
-                
-                list.forEach(item => {
-                  totalPrice += item.price
-                })
-                totalPriceValye.innerHTML = totalPrice;
-              })
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch city data');
+            }
+  
+            const getHouseInCity = await response.json();
+            console.log("daKa", getHouseInCity);
+            let listOfHousesInCity = {}
+  
+            getHouseInCity.forEach(item => {
+              listOfHousesInCity[item.Description] = item.Ref
+            })
+  
+            console.log("listOfHousesInCity", listOfHousesInCity);
+            return listOfHousesInCity
+          } catch (error) {
+            console.error("Error fetching oblast data:", error);
+          }
+        }
+  
+        async function populateHouses(nameCity, InputByUser_House) {
+          const houses = await getHousesInCity(nameCity, InputByUser_House);
+          const dataListOnPage = document.getElementById('Warehouses');
+          console.log("houses",houses)
+          
+          const existingOptions = new Set(
+            Array.from(dataListOnPage.options).map(option => option.value)
+          );
+
+          dataListOnPage.innerHTML = "";
+
+          for (const housesName in houses) {
+            if (!existingOptions.has(housesName)) {
+              const option = document.createElement('option');
+              option.value = housesName;
+              option.dataset.ref = houses[housesName];
+              dataListOnPage.appendChild(option);
+            }
+          }
+        }
+
+        const houseInput = document.getElementById('Warehouse-input');
+        console.log("!!!!!!!!!!!!!!!!!!!!!!houseInput ",houseInput)
+
+        houseInput.addEventListener('input', function() {
+          // const selectedCity = cityInput.value;
+          const selectedHouse = houseInput.value;
+          console.log('Обрана вулиця:', selectedHouse);
+          // RefCity = listOfCityInOblast[selectedCity]
+          const cityInput = document.getElementById('city-input');
+          nameCity = cityInput.value;
+          InputByUser_House = selectedHouse
+          console.log('Обране місто (RefCity):', nameCity);
+          console.log("RefCity",nameCity)
+          if (nameCity || InputByUser_House) {
+            populateHouses(nameCity, InputByUser_House);
+          }
+        });
+
+        //Робота з кнопкою на сторінці пеймент, не доступна, якщо якесь з полів не заповнине
+        const nameInput = document.getElementById('name-input');
+        const secondNameInput = document.getElementById('second-name-input');
+        const emailInput = document.getElementById('email-input');
+        const phoneInput = document.getElementById('phone-input');
+        const confirmOrderBtn = document.querySelector('.confirm-order-btn');
+        const methodCheckboxText = document.getElementById('method-checkbox-text');
+        const methodCheckbox = document.getElementById('method-checkbox');
+        const oblastInput = document.querySelector("input[list=regions]"); //.value
+        const cityInputForCheck = document.querySelector("input[list=citys]"); //.value
+        const warehouseInput = document.querySelector("input[list=Warehouses]"); //.value
+
+        nameInput.addEventListener('input', () => {
+          if (nameInput.value.trim() !== '') {
+            nameInput.classList.remove('error'); 
+          } else {
+            nameInput.classList.add('error');
+          }
+        });
+
+        secondNameInput.addEventListener('input', () => {
+          if (secondNameInput.value.trim() !== '') {
+            secondNameInput.classList.remove('error'); 
+          } else {
+            secondNameInput.classList.add('error');
+          }
+        });
+
+        emailInput.addEventListener('input', () => {
+          if (emailInput.value.trim() !== '') {
+            emailInput.classList.remove('error'); 
+          } else {
+            emailInput.classList.add('error');
+          }
+        });
+
+        phoneInput.addEventListener('input', () => {
+          if (phoneInput.value.trim() !== '') {
+            phoneInput.classList.remove('error'); 
+          } else {
+            phoneInput.classList.add('error');
+          }
+        });
+
+
+        methodCheckboxText.addEventListener('input', () => {
+          if (!methodCheckbox.checked) {
+            methodCheckboxText.classList.add('error-checkbox-text'); 
+          } else {
+            methodCheckboxText.classList.remove('error-checkbox-text');
+          }
+        });
+
+        oblastInput.addEventListener('input', () => {
+          if (oblastInput.value.trim() !== '') {
+            oblastInput.classList.remove('error'); 
+          } else {
+            oblastInput.classList.add('error'); 
+          }
+        });
+
+        cityInputForCheck.addEventListener('input', () => {
+          if (cityInputForCheck.value.trim() !== '') {
+            cityInputForCheck.classList.remove('error'); 
+          } else {
+            cityInputForCheck.classList.add('error'); 
+          }
+        });
+
+        warehouseInput.addEventListener('input', () => {
+          if (warehouseInput.value.trim() !== '') {
+            warehouseInput.classList.remove('error'); 
+          } else {
+            warehouseInput.classList.add('error'); 
+          }
+        });
+
+        confirmOrderBtn.addEventListener('click', async (event) => {
+
+          const cartedItems =  getItemsFromStorageCart();
+          console.log("cartedItems", cartedItems)
+          const cartTitle = document.getElementById('cart-title');
+
+          cartedItems.forEach(item => {
+            if (item.size == "Не обрано") {
+              event.preventDefault(); 
+              const errorMessageCart = document.querySelector('.error-message-cart');
+              errorMessageCart.style.display = 'block';
+
+              cartTitle.insertAdjacentElement('afterend', errorMessageCart); 
+            }
+          });
+
+          const isFormValid = nameInput.value.trim() !== '' &&
+                              secondNameInput.value.trim() !== '' &&
+                              emailInput.value.trim() !== '' &&
+                              phoneInput.value.trim() !== '' &&
+                              oblastInput.value.trim() !== '' &&
+                              cityInputForCheck.value.trim() !== '' && 
+                              warehouseInput.value.trim() !== '' &&
+                              methodCheckbox.checked &&
+                              !cartedItems.some(item => item.size === "Не обрано");
+
+          if (!isFormValid) {
+            event.preventDefault();
+            if (nameInput.value.trim() === '') {
+              nameInput.classList.add('error');
+            }
+
+            if (oblastInput.value.trim() === '') {
+              oblastInput.classList.add('error');
+            }
+
+            if (cityInputForCheck.value.trim() === '') {
+              cityInputForCheck.classList.add('error');
+            }
+
+            if (warehouseInput.value.trim() === '') {
+              warehouseInput.classList.add('error');
+            }
+
+            if (!methodCheckbox.checked){
+              methodCheckboxText.classList.add('error-checkbox-text');
+            }
+
+            if (secondNameInput.value.trim() === '') {
+              secondNameInput.classList.add('error');
+            }
+
+            if (emailInput.value.trim() === '') {
+              emailInput.classList.add('error');
+            }
+
+            if (phoneInput.value.trim() === '') {
+              phoneInput.classList.add('error');
+            }
+
+            return
+          }
+
+          console.log("document",document.querySelector("input[list=regions]").value);
 
 
 
-              
-        
-              let listOfOblasts = {}
-              async function getOblast() {
-                try {
-                  const response = await fetch('/get_oblast');
-                  if (!response.ok) {
-                      throw new Error('Failed to fetch oblast data');
-                  }
-        
-                  const getOblast = await response.json();
-                  console.log("dada", getOblast);
-        
-                  getOblast.forEach(item => {
-                    listOfOblasts[item.Description] = item.Ref
-                  })
-        
-                  console.log("listOfOblasts", listOfOblasts);
-                  return listOfOblasts
-                } catch (error) {
-                  console.error("Error fetching oblast data:", error);
-                }
-              }
-        
-              async function populateRegions() {
-                const regions = await getOblast();
-        
-                const dataListOnPage = document.getElementById('regions');
-        
-                for (const regionName in regions) {
-                  const option = document.createElement('option');
-                  option.value = regionName;
-                  option.dataset.ref = regions[regionName];
-                  dataListOnPage.appendChild(option);
-                }
-              }
-        
-              populateRegions();
-        
-              let listOfCityInOblast = {}
-              async function getCityInOblast(RefOblast, InputByUser_City) {
-                console.log("RefOblast",RefOblast)
-                console.log("InputByUser_City",InputByUser_City)
-                try {
-                    const response = await fetch(`/get_city_in_oblast?RefOblast=${RefOblast}&InputByUser_City=${InputByUser_City}`, {
-                    method: 'GET',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    }
-                  });
-                  if (!response.ok) {
-                      throw new Error('Failed to fetch city data');
-                  }
-        
-                  const getCityInOblast = await response.json();
-                  console.log("dafa", getCityInOblast);
-        
-                  getCityInOblast.forEach(item => {
-                    listOfCityInOblast[item.Description] = item.Ref
-                  })
-        
-                  console.log("listOfCityInOblast", listOfCityInOblast);
-                  return listOfCityInOblast
-                } catch (error) {
-                  console.error("Error fetching oblast data:", error);
-                }
-              }
-        
-              async function populateCitys(RefOblast, InputByUser_City) {
-                const citys = await getCityInOblast(RefOblast, InputByUser_City);
-                const dataListOnPage = document.getElementById('citys');
-                
-                const existingOptions = new Set(
-                  Array.from(dataListOnPage.options).map(option => option.value)
-                );
+          const nameTELEGRAM = document.getElementById("name-input").value;
+          const secondNameTELEGRAM = document.getElementById("second-name-input").value;
+          const emailTELEGRAM = document.getElementById("email-input").value;
+          const phoneTELEGRAM = document.getElementById("phone-input").value;
+          const commentTELEGRAM = document.querySelector("textarea").value;
+          const regionTELEGRAM = document.getElementById("region-input").value;
+          const cityTELEGRAM = document.getElementById("city-input").value;
+          const warehouseTELEGRAM = document.getElementById("Warehouse-input").value;
+          const paymentMethodTELEGRAM = document.getElementById("method-checkbox").checked ? "Накладний платіж" : "Повна оплата";
 
-                for (const citysName in citys) {
-                  if (!existingOptions.has(citysName)) { // Перевіряємо, чи міста ще немає в списку
-                    const option = document.createElement('option');
-                    option.value = citysName;
-                    option.dataset.ref = citys[citysName];
-                    dataListOnPage.appendChild(option);
-                  }
-                }
-              }
- 
-        
+          const cartItemPaymentContainerTELEFRAM = document.querySelector(".cart-item-payment-container");
+          console.log("cartItemPaymentContainer", cartItemPaymentContainerTELEFRAM)
 
-                const regionInput = document.getElementById('region-input');
-                const cityInput = document.getElementById('city-input');
-                let RefOblast = 0;
+          const goodNameTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainTextElement")).map(item => item.textContent)
+          console.log("goodNameTELEGRAM", goodNameTELEGRAM)
 
-                regionInput.addEventListener('input', function() {
-                    const selectedRegion = regionInput.value;
-                    const selectedCity = cityInput.value;
-                    console.log('Обрана область:', selectedRegion);
-                    RefOblast = listOfOblasts[selectedRegion]
-                    InputByUser_City = selectedCity
-                    console.log('Обране місто:', selectedCity);
-                    console.log("RefOblast",RefOblast)
-                    if (RefOblast) {
-                        populateCitys(RefOblast, InputByUser_City);
-                    }
-                });
+          const InfoMainCodeElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainCodeElementValue")).map(item => item.textContent)
+          console.log("InfoMainCodeElementValueTELEGRAM", InfoMainCodeElementValueTELEGRAM)
 
-                cityInput.addEventListener('input', function() {
-                    const selectedRegion = regionInput.value;
-                    const selectedCity = cityInput.value;
-                    RefOblast = listOfOblasts[selectedRegion]
-                    InputByUser_City = selectedCity
-                    if (RefOblast) {
-                        InputByUser_House = " ";
-                        const cityInput = document.getElementById('city-input');
-                        nameCity = InputByUser_City
-                        populateCitys(RefOblast, InputByUser_City);
-                        // populateStreets(RefCity, InputByUser_Street);
-                        populateHouses(nameCity, InputByUser_House);
-                    }
-                });
+          const InfoMainSizeElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainSizeElementValue")).map(item => item.textContent)
+          console.log("InfoMainSizeElementValueTELEGRAM", InfoMainSizeElementValueTELEGRAM)
+
+          const InfoColorMainElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoColorMainElementValue")).map(item => item.textContent)
+          console.log("InfoColorMainElementValueTELEGRAM", InfoColorMainElementValueTELEGRAM)
+
+          const InfoPriceColorElementTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoPriceColorElement")).map(item => item.textContent)
+          console.log("InfoPriceColorElementTELEGRAM", InfoPriceColorElementTELEGRAM)
+
+          const goodsToBuyTELEGRAM = []
+
+          goodNameTELEGRAM.forEach((goodName, index) => {
+            goodsToBuyTELEGRAM.push({
+              name: goodName,
+              code: InfoMainCodeElementValueTELEGRAM[index],
+              size: InfoMainSizeElementValueTELEGRAM[index],
+              color: InfoColorMainElementValueTELEGRAM[index],
+              price: InfoPriceColorElementTELEGRAM[index],
+            });
+          });
+          console.log("goodsToBuyTELEGRAM", goodsToBuyTELEGRAM)
+
+
+
+          const orderData = {
+            nameTELEGRAM,
+            secondNameTELEGRAM,
+            emailTELEGRAM,
+            phoneTELEGRAM,
+            commentTELEGRAM,
+            regionTELEGRAM,
+            cityTELEGRAM,
+            warehouseTELEGRAM,
+            paymentMethodTELEGRAM,
+            goodsToBuyTELEGRAM,
+          };
+          console.log("orderData", orderData)
+
+          try {
+            const response = await fetch("/new_order", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(orderData),
+            });
+
+            const result = await response.json();
+            if (result.status === "success") {
+              alert("Замовлення успішно відправлене!");
+            } else {
+              alert("Помилка при відправці замовлення: " + result.message);
+            }
+          } catch (error) {
+            alert("Сталася помилка: " + error.message);
+          }
 
 
 
 
-
-
-                let listOfStreetsInCity = {}
-              async function getStreetInCity(RefCity, InputByUser_Street) {
-                console.log("RefCity",RefCity)
-                console.log("InputByUser_Street",InputByUser_Street)
-                try {
-                    const response = await fetch(`/get_street_in_city?RefCity=${RefCity}&InputByUser_Street=${InputByUser_Street}`, {
-                    method: 'GET',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    }
-                  });
-                  if (!response.ok) {
-                      throw new Error('Failed to fetch city data');
-                  }
-        
-                  const getStreetInCity = await response.json();
-                  console.log("daLa", getStreetInCity);
-        
-                  getStreetInCity.forEach(item => {
-                    listOfStreetsInCity[item.Description] = item.Ref
-                  })
-        
-                  console.log("listOfStreetsInCity", listOfStreetsInCity);
-                  return listOfStreetsInCity
-                } catch (error) {
-                  console.error("Error fetching oblast data:", error);
-                }
-              }
-        
-              async function populateStreets(RefCity, InputByUser_Street) {
-                const streets = await getStreetInCity(RefCity, InputByUser_Street);
-                const dataListOnPage = document.getElementById('streets');
-                
-                const existingOptions = new Set(
-                  Array.from(dataListOnPage.options).map(option => option.value)
-                );
-
-                dataListOnPage.innerHTML = "";
-
-                for (const streetsName in streets) {
-                  if (!existingOptions.has(streetsName)) {
-                    const option = document.createElement('option');
-                    option.value = streetsName;
-                    option.dataset.ref = streets[streetsName];
-                    dataListOnPage.appendChild(option);
-                  }
-                }
-              }
- 
-              document.addEventListener('DOMContentLoaded', function() {
-                const streetInput = document.getElementById('street-input');
-                let RefCity = 0;
-
-                streetInput.addEventListener('input', function() {
-                  const selectedCity = cityInput.value;
-                  const selectedStreet = streetInput.value;
-                  console.log('Обрана вулиця:', selectedStreet);
-                  RefCity = listOfCityInOblast[selectedCity];
-                  InputByUser_Street = selectedStreet;
-                  console.log('Обране місто (RefCity):', RefCity);
-                  console.log("RefCity", RefCity);
-                  if (RefCity) {
-                      populateStreets(RefCity, InputByUser_Street);
-                  }
-                });
-              });
+        });
+        //Робота з кнопкою на сторінці пеймент, не доступна, якщо якесь з полів не заповнине
+          
 
 
 
-
-
-
-                
-              async function getHousesInCity(nameCity, InputByUser_House) {
-                console.log("nameCity",nameCity)
-                console.log("InputByUser_Street",InputByUser_House)
-                try {
-                    const response = await fetch(`/get_wareHouse_in_city_streetAd?nameCity=${nameCity}&InputByUser_House=${InputByUser_House}`, {
-                    method: 'GET',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    }
-                  });
-                  if (!response.ok) {
-                      throw new Error('Failed to fetch city data');
-                  }
-        
-                  const getHouseInCity = await response.json();
-                  console.log("daKa", getHouseInCity);
-                  let listOfHousesInCity = {}
-        
-                  getHouseInCity.forEach(item => {
-                    listOfHousesInCity[item.Description] = item.Ref
-                  })
-        
-                  console.log("listOfHousesInCity", listOfHousesInCity);
-                  return listOfHousesInCity
-                } catch (error) {
-                  console.error("Error fetching oblast data:", error);
-                }
-              }
-        
-              async function populateHouses(nameCity, InputByUser_House) {
-                const houses = await getHousesInCity(nameCity, InputByUser_House);
-                const dataListOnPage = document.getElementById('Warehouses');
-                console.log("houses",houses)
-                
-                const existingOptions = new Set(
-                  Array.from(dataListOnPage.options).map(option => option.value)
-                );
-
-                dataListOnPage.innerHTML = "";
-
-                for (const housesName in houses) {
-                  if (!existingOptions.has(housesName)) {
-                    const option = document.createElement('option');
-                    option.value = housesName;
-                    option.dataset.ref = houses[housesName];
-                    dataListOnPage.appendChild(option);
-                  }
-                }
-              }
- 
-                const houseInput = document.getElementById('Warehouse-input');
-                console.log("!!!!!!!!!!!!!!!!!!!!!!houseInput ",houseInput)
-
-                houseInput.addEventListener('input', function() {
-                    // const selectedCity = cityInput.value;
-                    const selectedHouse = houseInput.value;
-                    console.log('Обрана вулиця:', selectedHouse);
-                    // RefCity = listOfCityInOblast[selectedCity]
-                    const cityInput = document.getElementById('city-input');
-                    nameCity = cityInput.value;
-                    InputByUser_House = selectedHouse
-                    console.log('Обране місто (RefCity):', nameCity);
-                    console.log("RefCity",nameCity)
-                    if (nameCity || InputByUser_House) {
-                      populateHouses(nameCity, InputByUser_House);
-                    }
-                    // if(InputByUser_House){
-                    //   populateHouses(nameCity, InputByUser_House);
-                    // }
-                });
-
-
-
-                
-
-
-
-        
-        
-          </script>
-    </body>
+  
+  
+    </script>
+  </body>
 </html>

@@ -21,9 +21,8 @@
 .good-info{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     width: 50%;
-    padding: 20px 20px 0px 20px;
+    padding: 0px 20px 0px 20px;
     flex: 1;
     
 }
@@ -34,7 +33,26 @@
     border: none;
     height: 70px;
     border-radius: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
 }
+
+.add-to-cart-btn:hover {
+    animation: slide-up 0.1s ease forwards;
+    animation-delay: 0.05s; 
+    box-shadow: 0 8px 20px rgba(25, 0, 255, 0.192); 
+  }
+
+  @keyframes slide-up {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-5px);
+    }
+  }
 
 .good-name{
     font-weight: bolder;
@@ -49,11 +67,24 @@
 .good-price{
     font-weight: bolder;
     font-size: 25px;
+    margin: 20px 0px 20px 0px;
 }
 
-.description-header , .composition-and-care-header , .color-name , .size-name{
+.color-name , .size-name{
     font-weight: bolder;
     font-size: 25px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.description-header, .composition-and-care-header{
+    font-weight: bolder;
+    font-size: 25px;
+}
+
+.description, .composition-and-care{
+    margin-bottom: 20px;
 }
 
 .add-to-cart-btn.animate {
@@ -78,3 +109,56 @@
     }
 }
 
+.size-name-datalist {
+    font-size: 16px; 
+    width: 100%; 
+    padding: 3px; 
+    margin-top: 3px; 
+    border: 2px solid #ccc; 
+    border-radius: 4px; 
+    text-align: center; 
+    text-align-last: center;
+    height: 30px;
+    transition: border 0.25s ease;
+    margin-left: 5px;
+}
+
+.size-name-datalist:hover {
+    border: 2px solid #274bff ; 
+    box-shadow: 0 0px 6px rgba(39, 75, 255, 0.5);
+}
+
+.add-to-cart-btn-button{
+    border: none;
+    background-color: transparent;
+}
+
+.meter-for-body {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border: 2px solid #ccc;
+    background-color: transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+    margin-top: 3px;
+}
+
+.background {
+    background-image: url('../static/public/meter-for-body.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 70%;
+    height: 70%;
+    
+}
+
+.meter-for-body:hover{
+    border: 2px solid #274bff ; 
+    box-shadow: 0 0px 6px rgba(39, 75, 255, 0.5);
+}

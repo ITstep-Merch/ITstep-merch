@@ -79,6 +79,10 @@ textarea {
     border-radius: 4px;
 }
 
+.order-form textarea {
+    height: 45px;
+}
+
 .cart-item {
     display: flex;
     align-items: center;
@@ -199,4 +203,19 @@ textarea {
 .cart-item-payment-container{
     overflow-y: auto;
     height: 400px;
+}
+
+.error {
+    border-color: red !important;
+    outline: none !important;
+}
+
+.error-checkbox-text {
+    color: red !important;
+}
+
+.error-message-cart{
+    margin-left: 20px;
+    margin-bottom: 0px;
+    color: red !important;
 }
