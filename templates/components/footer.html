@@ -39,6 +39,8 @@
         likesCounter.textContent = likeCounter;
       }
     }
+
+    
   
     function initializeCartsCounter() {
       const cartsCounter = document.querySelector('.carts-counter');
@@ -151,6 +153,7 @@
       initializeLikesCounter()
       displayLikedItems()
     }
+    
   
         async function saveGoodToLocalStorageCart(ID) {
           console.log('jjj',ID)
@@ -185,6 +188,7 @@
           initializeCartsCounter()
           displayCartedItems()
         }
+        
   
         function toggleLike(ID){
           findElementLikeButton = document.getElementById(ID)
@@ -202,11 +206,13 @@
           }
           displayLikedItems()
         }
+        console.log("!!!!!!!!!")
   
         function toggleCart(ID){   
   
             console.log(ID)
             findElementCartButton = document.getElementById(ID)
+            console.log("findElementCartButton", findElementCartButton)
             const isCarted = findElementCartButton.classList.contains('carted');
             if (window.location.pathname === '/') { 
               findElementCartButton.classList.toggle('carted')
@@ -402,8 +408,6 @@
           }
   
           const baseGoodUrl = "{{ url_for('good', id=0) }}".replace("0", "");
-  
-  
   
           cartedItems.forEach(item => {
   
@@ -602,13 +606,16 @@
           const regions = await getOblast();
   
           const dataListOnPage = document.getElementById('regions');
-  
-          for (const regionName in regions) {
-            const option = document.createElement('option');
-            option.value = regionName;
-            option.dataset.ref = regions[regionName];
-            dataListOnPage.appendChild(option);
+
+          if(dataListOnPage){
+            for (const regionName in regions) {
+              const option = document.createElement('option');
+              option.value = regionName;
+              option.dataset.ref = regions[regionName];
+              dataListOnPage.appendChild(option);
+            }
           }
+
         }
   
         populateRegions();
@@ -640,7 +647,7 @@
           } catch (error) {
             console.error("Error fetching oblast data:", error);
           }
-        }
+        }        
   
         async function populateCitys(RefOblast, InputByUser_City) {
           const citys = await getCityInOblast(RefOblast, InputByUser_City);
@@ -660,13 +667,16 @@
           }
         }
 
+        
+
   
 
           const regionInput = document.getElementById('region-input');
           const cityInput = document.getElementById('city-input');
           let RefOblast = 0;
 
-          regionInput.addEventListener('input', function() {
+          if(regionInput){
+            regionInput.addEventListener('input', function() {
               const selectedRegion = regionInput.value;
               const selectedCity = cityInput.value;
               console.log('Обрана область:', selectedRegion);
@@ -677,24 +687,25 @@
               if (RefOblast) {
                   populateCitys(RefOblast, InputByUser_City);
               }
-          });
+            });
+          }
 
-          cityInput.addEventListener('input', function() {
-              const selectedRegion = regionInput.value;
-              const selectedCity = cityInput.value;
-              RefOblast = listOfOblasts[selectedRegion]
-              InputByUser_City = selectedCity
-              if (RefOblast) {
-                  InputByUser_House = " ";
-                  const cityInput = document.getElementById('city-input');
-                  nameCity = InputByUser_City
-                  populateCitys(RefOblast, InputByUser_City);
-                  // populateStreets(RefCity, InputByUser_Street);
-                  populateHouses(nameCity, InputByUser_House);
-              }
-          });
-
-
+          if(regionInput){
+            cityInput.addEventListener('input', function() {
+                const selectedRegion = regionInput.value;
+                const selectedCity = cityInput.value;
+                RefOblast = listOfOblasts[selectedRegion]
+                InputByUser_City = selectedCity
+                if (RefOblast) {
+                    InputByUser_House = " ";
+                    const cityInput = document.getElementById('city-input');
+                    nameCity = InputByUser_City
+                    populateCitys(RefOblast, InputByUser_City);
+                    // populateStreets(RefCity, InputByUser_Street);
+                    populateHouses(nameCity, InputByUser_House);
+                }
+            });
+          }
 
 
 
@@ -823,22 +834,25 @@
         }
 
         const houseInput = document.getElementById('Warehouse-input');
-        console.log("!!!!!!!!!!!!!!!!!!!!!!houseInput ",houseInput)
 
-        houseInput.addEventListener('input', function() {
-          // const selectedCity = cityInput.value;
-          const selectedHouse = houseInput.value;
-          console.log('Обрана вулиця:', selectedHouse);
-          // RefCity = listOfCityInOblast[selectedCity]
-          const cityInput = document.getElementById('city-input');
-          nameCity = cityInput.value;
-          InputByUser_House = selectedHouse
-          console.log('Обране місто (RefCity):', nameCity);
-          console.log("RefCity",nameCity)
-          if (nameCity || InputByUser_House) {
-            populateHouses(nameCity, InputByUser_House);
-          }
-        });
+        if(houseInput){
+          houseInput.addEventListener('input', function() {
+            // const selectedCity = cityInput.value;
+            const selectedHouse = houseInput.value;
+            console.log('Обрана вулиця:', selectedHouse);
+            // RefCity = listOfCityInOblast[selectedCity]
+            const cityInput = document.getElementById('city-input');
+            nameCity = cityInput.value;
+            InputByUser_House = selectedHouse
+            console.log('Обране місто (RefCity):', nameCity);
+            console.log("RefCity",nameCity)
+            if (nameCity || InputByUser_House) {
+              populateHouses(nameCity, InputByUser_House);
+            }
+          });
+        }
+
+
 
         //Робота з кнопкою на сторінці пеймент, не доступна, якщо якесь з полів не заповнине
         const nameInput = document.getElementById('name-input');
@@ -851,224 +865,288 @@
         const oblastInput = document.querySelector("input[list=regions]"); //.value
         const cityInputForCheck = document.querySelector("input[list=citys]"); //.value
         const warehouseInput = document.querySelector("input[list=Warehouses]"); //.value
+        
 
-        nameInput.addEventListener('input', () => {
+        if(nameInput){
+          nameInput.addEventListener('input', () => {
           if (nameInput.value.trim() !== '') {
             nameInput.classList.remove('error'); 
           } else {
             nameInput.classList.add('error');
           }
-        });
-
-        secondNameInput.addEventListener('input', () => {
-          if (secondNameInput.value.trim() !== '') {
-            secondNameInput.classList.remove('error'); 
-          } else {
-            secondNameInput.classList.add('error');
-          }
-        });
-
-        emailInput.addEventListener('input', () => {
-          if (emailInput.value.trim() !== '') {
-            emailInput.classList.remove('error'); 
-          } else {
-            emailInput.classList.add('error');
-          }
-        });
-
-        phoneInput.addEventListener('input', () => {
-          if (phoneInput.value.trim() !== '') {
-            phoneInput.classList.remove('error'); 
-          } else {
-            phoneInput.classList.add('error');
-          }
-        });
-
-
-        methodCheckboxText.addEventListener('input', () => {
-          if (!methodCheckbox.checked) {
-            methodCheckboxText.classList.add('error-checkbox-text'); 
-          } else {
-            methodCheckboxText.classList.remove('error-checkbox-text');
-          }
-        });
-
-        oblastInput.addEventListener('input', () => {
-          if (oblastInput.value.trim() !== '') {
-            oblastInput.classList.remove('error'); 
-          } else {
-            oblastInput.classList.add('error'); 
-          }
-        });
-
-        cityInputForCheck.addEventListener('input', () => {
-          if (cityInputForCheck.value.trim() !== '') {
-            cityInputForCheck.classList.remove('error'); 
-          } else {
-            cityInputForCheck.classList.add('error'); 
-          }
-        });
-
-        warehouseInput.addEventListener('input', () => {
-          if (warehouseInput.value.trim() !== '') {
-            warehouseInput.classList.remove('error'); 
-          } else {
-            warehouseInput.classList.add('error'); 
-          }
-        });
-
-        confirmOrderBtn.addEventListener('click', async (event) => {
-
-          const cartedItems =  getItemsFromStorageCart();
-          console.log("cartedItems", cartedItems)
-          const cartTitle = document.getElementById('cart-title');
-
-          cartedItems.forEach(item => {
-            if (item.size == "Не обрано") {
-              event.preventDefault(); 
-              const errorMessageCart = document.querySelector('.error-message-cart');
-              errorMessageCart.style.display = 'block';
-
-              cartTitle.insertAdjacentElement('afterend', errorMessageCart); 
-            }
           });
+        }
 
-          const isFormValid = nameInput.value.trim() !== '' &&
-                              secondNameInput.value.trim() !== '' &&
-                              emailInput.value.trim() !== '' &&
-                              phoneInput.value.trim() !== '' &&
-                              oblastInput.value.trim() !== '' &&
-                              cityInputForCheck.value.trim() !== '' && 
-                              warehouseInput.value.trim() !== '' &&
-                              methodCheckbox.checked &&
-                              !cartedItems.some(item => item.size === "Не обрано");
-
-          if (!isFormValid) {
-            event.preventDefault();
-            if (nameInput.value.trim() === '') {
-              nameInput.classList.add('error');
-            }
-
-            if (oblastInput.value.trim() === '') {
-              oblastInput.classList.add('error');
-            }
-
-            if (cityInputForCheck.value.trim() === '') {
-              cityInputForCheck.classList.add('error');
-            }
-
-            if (warehouseInput.value.trim() === '') {
-              warehouseInput.classList.add('error');
-            }
-
-            if (!methodCheckbox.checked){
-              methodCheckboxText.classList.add('error-checkbox-text');
-            }
-
-            if (secondNameInput.value.trim() === '') {
+        if(secondNameInput){
+          secondNameInput.addEventListener('input', () => {
+            if (secondNameInput.value.trim() !== '') {
+              secondNameInput.classList.remove('error'); 
+            } else {
               secondNameInput.classList.add('error');
             }
+          });
+        }
 
-            if (emailInput.value.trim() === '') {
+        if(emailInput){
+          emailInput.addEventListener('input', () => {
+            if (emailInput.value.trim() !== '') {
+              emailInput.classList.remove('error'); 
+            } else {
               emailInput.classList.add('error');
             }
+          });
+        }
 
-            if (phoneInput.value.trim() === '') {
+        if(phoneInput){
+          phoneInput.addEventListener('input', () => {
+            if (phoneInput.value.trim() !== '') {
+              phoneInput.classList.remove('error'); 
+            } else {
               phoneInput.classList.add('error');
             }
-
-            return
-          }
-
-          console.log("document",document.querySelector("input[list=regions]").value);
-
-
-
-          const nameTELEGRAM = document.getElementById("name-input").value;
-          const secondNameTELEGRAM = document.getElementById("second-name-input").value;
-          const emailTELEGRAM = document.getElementById("email-input").value;
-          const phoneTELEGRAM = document.getElementById("phone-input").value;
-          const commentTELEGRAM = document.querySelector("textarea").value;
-          const regionTELEGRAM = document.getElementById("region-input").value;
-          const cityTELEGRAM = document.getElementById("city-input").value;
-          const warehouseTELEGRAM = document.getElementById("Warehouse-input").value;
-          const paymentMethodTELEGRAM = document.getElementById("method-checkbox").checked ? "Накладний платіж" : "Повна оплата";
-
-          const cartItemPaymentContainerTELEFRAM = document.querySelector(".cart-item-payment-container");
-          console.log("cartItemPaymentContainer", cartItemPaymentContainerTELEFRAM)
-
-          const goodNameTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainTextElement")).map(item => item.textContent)
-          console.log("goodNameTELEGRAM", goodNameTELEGRAM)
-
-          const InfoMainCodeElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainCodeElementValue")).map(item => item.textContent)
-          console.log("InfoMainCodeElementValueTELEGRAM", InfoMainCodeElementValueTELEGRAM)
-
-          const InfoMainSizeElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainSizeElementValue")).map(item => item.textContent)
-          console.log("InfoMainSizeElementValueTELEGRAM", InfoMainSizeElementValueTELEGRAM)
-
-          const InfoColorMainElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoColorMainElementValue")).map(item => item.textContent)
-          console.log("InfoColorMainElementValueTELEGRAM", InfoColorMainElementValueTELEGRAM)
-
-          const InfoPriceColorElementTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoPriceColorElement")).map(item => item.textContent)
-          console.log("InfoPriceColorElementTELEGRAM", InfoPriceColorElementTELEGRAM)
-
-          const goodsToBuyTELEGRAM = []
-
-          goodNameTELEGRAM.forEach((goodName, index) => {
-            goodsToBuyTELEGRAM.push({
-              name: goodName,
-              code: InfoMainCodeElementValueTELEGRAM[index],
-              size: InfoMainSizeElementValueTELEGRAM[index],
-              color: InfoColorMainElementValueTELEGRAM[index],
-              price: InfoPriceColorElementTELEGRAM[index],
-            });
           });
-          console.log("goodsToBuyTELEGRAM", goodsToBuyTELEGRAM)
+        }
 
+        if(methodCheckboxText){
+          methodCheckboxText.addEventListener('input', () => {
+            if (!methodCheckbox.checked) {
+              methodCheckboxText.classList.add('error-checkbox-text'); 
+            } else {
+              methodCheckboxText.classList.remove('error-checkbox-text');
+            }
+          });
+        }
 
+        if(oblastInput){
+          oblastInput.addEventListener('input', () => {
+            if (oblastInput.value.trim() !== '') {
+              oblastInput.classList.remove('error'); 
+            } else {
+              oblastInput.classList.add('error'); 
+            }
+          });
+        }
 
-          const orderData = {
-            nameTELEGRAM,
-            secondNameTELEGRAM,
-            emailTELEGRAM,
-            phoneTELEGRAM,
-            commentTELEGRAM,
-            regionTELEGRAM,
-            cityTELEGRAM,
-            warehouseTELEGRAM,
-            paymentMethodTELEGRAM,
-            goodsToBuyTELEGRAM,
-          };
-          console.log("orderData", orderData)
+        if(cityInputForCheck){
+          cityInputForCheck.addEventListener('input', () => {
+            if (cityInputForCheck.value.trim() !== '') {
+              cityInputForCheck.classList.remove('error'); 
+            } else {
+              cityInputForCheck.classList.add('error'); 
+            }
+          });
+        }
 
-          try {
-            const response = await fetch("/new_order", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(orderData),
+        if(warehouseInput){
+          warehouseInput.addEventListener('input', () => {
+            if (warehouseInput.value.trim() !== '') {
+              warehouseInput.classList.remove('error'); 
+            } else {
+              warehouseInput.classList.add('error'); 
+            }
+          });
+        }
+
+        if(confirmOrderBtn){
+          confirmOrderBtn.addEventListener('click', async (event) => {
+
+            const cartedItems =  getItemsFromStorageCart();
+            console.log("cartedItems", cartedItems)
+            const cartTitle = document.getElementById('cart-title');
+
+            cartedItems.forEach(item => {
+              if (item.size == "Не обрано") {
+                event.preventDefault(); 
+                const errorMessageCart = document.querySelector('.error-message-cart');
+                errorMessageCart.style.display = 'block';
+
+                cartTitle.insertAdjacentElement('afterend', errorMessageCart); 
+              }
             });
 
-            const result = await response.json();
-            if (result.status === "success") {
-              alert("Замовлення успішно відправлене!");
-            } else {
-              alert("Помилка при відправці замовлення: " + result.message);
+            const isFormValid = nameInput.value.trim() !== '' &&
+                                secondNameInput.value.trim() !== '' &&
+                                emailInput.value.trim() !== '' &&
+                                phoneInput.value.trim() !== '' &&
+                                oblastInput.value.trim() !== '' &&
+                                cityInputForCheck.value.trim() !== '' && 
+                                warehouseInput.value.trim() !== '' &&
+                                methodCheckbox.checked &&
+                                !cartedItems.some(item => item.size === "Не обрано");
+
+            if (!isFormValid) {
+              event.preventDefault();
+              if (nameInput.value.trim() === '') {
+                nameInput.classList.add('error');
+              }
+
+              if (oblastInput.value.trim() === '') {
+                oblastInput.classList.add('error');
+              }
+
+              if (cityInputForCheck.value.trim() === '') {
+                cityInputForCheck.classList.add('error');
+              }
+
+              if (warehouseInput.value.trim() === '') {
+                warehouseInput.classList.add('error');
+              }
+
+              if (!methodCheckbox.checked){
+                methodCheckboxText.classList.add('error-checkbox-text');
+              }
+
+              if (secondNameInput.value.trim() === '') {
+                secondNameInput.classList.add('error');
+              }
+
+              if (emailInput.value.trim() === '') {
+                emailInput.classList.add('error');
+              }
+
+              if (phoneInput.value.trim() === '') {
+                phoneInput.classList.add('error');
+              }
+
+              return
             }
-          } catch (error) {
-            alert("Сталася помилка: " + error.message);
-          }
+
+            console.log("document",document.querySelector("input[list=regions]").value);
+            
+
+
+
+            const nameTELEGRAM = document.getElementById("name-input").value;
+            const secondNameTELEGRAM = document.getElementById("second-name-input").value;
+            const emailTELEGRAM = document.getElementById("email-input").value;
+            const phoneTELEGRAM = document.getElementById("phone-input").value;
+            const commentTELEGRAM = document.querySelector("textarea").value;
+            const regionTELEGRAM = document.getElementById("region-input").value;
+            const cityTELEGRAM = document.getElementById("city-input").value;
+            const warehouseTELEGRAM = document.getElementById("Warehouse-input").value;
+            const paymentMethodTELEGRAM = document.getElementById("method-checkbox").checked ? "Накладний платіж" : "Повна оплата";
+
+            const cartItemPaymentContainerTELEFRAM = document.querySelector(".cart-item-payment-container");
+            console.log("cartItemPaymentContainer", cartItemPaymentContainerTELEFRAM)
+
+            const goodNameTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainTextElement")).map(item => item.textContent)
+            console.log("goodNameTELEGRAM", goodNameTELEGRAM)
+
+            const InfoMainCodeElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainCodeElementValue")).map(item => item.textContent)
+            console.log("InfoMainCodeElementValueTELEGRAM", InfoMainCodeElementValueTELEGRAM)
+
+            const InfoMainSizeElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainSizeElementValue")).map(item => item.textContent)
+            console.log("InfoMainSizeElementValueTELEGRAM", InfoMainSizeElementValueTELEGRAM)
+
+            const InfoColorMainElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoColorMainElementValue")).map(item => item.textContent)
+            console.log("InfoColorMainElementValueTELEGRAM", InfoColorMainElementValueTELEGRAM)
+
+            const InfoPriceColorElementTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoPriceColorElement")).map(item => item.textContent)
+            console.log("InfoPriceColorElementTELEGRAM", InfoPriceColorElementTELEGRAM)
+
+            const goodsToBuyTELEGRAM = []
+
+            goodNameTELEGRAM.forEach((goodName, index) => {
+              goodsToBuyTELEGRAM.push({
+                name: goodName,
+                code: InfoMainCodeElementValueTELEGRAM[index],
+                size: InfoMainSizeElementValueTELEGRAM[index],
+                color: InfoColorMainElementValueTELEGRAM[index],
+                price: InfoPriceColorElementTELEGRAM[index],
+              });
+            });
+            console.log("goodsToBuyTELEGRAM", goodsToBuyTELEGRAM)
+
+
+
+            const orderData = {
+              nameTELEGRAM,
+              secondNameTELEGRAM,
+              emailTELEGRAM,
+              phoneTELEGRAM,
+              commentTELEGRAM,
+              regionTELEGRAM,
+              cityTELEGRAM,
+              warehouseTELEGRAM,
+              paymentMethodTELEGRAM,
+              goodsToBuyTELEGRAM,
+            };
+            console.log("orderData", orderData)
+
+            try {
+              const response = await fetch("/new_order", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(orderData),
+              });
+
+              const result = await response.json();
+              if (result.status === "success") {
+                alert("Замовлення успішно відправлене!");
+              } else {
+                alert("Помилка при відправці замовлення: " + result.message);
+              }
+            } catch (error) {
+              alert("Сталася помилка: " + error.message);
+            }
 
 
 
 
-        });
+          })
+        };
         //Робота з кнопкою на сторінці пеймент, не доступна, якщо якесь з полів не заповнине
-          
 
 
 
-  
-  
+
+
+
+        const meterOverlay = document.querySelector('.meter-overlay');
+        const meterTableContainer = document.querySelector('.meter-table-container');
+        const meterTableCloseButton = document.querySelector('.meter-table-container-close-button');
+        const meterShowButton = document.querySelector('.meter-for-body');
+
+        if(meterShowButton){
+          meterShowButton.addEventListener('click', () => {
+            meterOverlay.style.display = 'block'; 
+            meterTableContainer.style.display = 'block'; 
+            document.body.classList.add('locked'); 
+          });
+        }
+
+        if(meterTableCloseButton){
+          meterTableCloseButton.addEventListener('click', () => {
+            meterOverlay.style.display = 'none';
+            meterTableContainer.style.display = 'none';
+            document.body.classList.remove('locked'); 
+          });
+        }
+
+        if(meterOverlay){
+          meterOverlay.addEventListener('click', () => {
+            meterOverlay.style.display = 'none';
+            meterTableContainer.style.display = 'none';
+            document.body.classList.remove('locked'); 
+          });
+        }
+
+        function showTab(tabId) {
+          // Прибираємо активний клас із усіх кнопок
+          document.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.remove('active');
+          });
+
+          // Ховаємо весь контент
+          document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('hidden');
+          });
+
+          // Показуємо обраний контент і додаємо активний клас до кнопки
+          document.getElementById(tabId).classList.remove('hidden');
+          document.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+
     </script>
   </body>
 </html>
