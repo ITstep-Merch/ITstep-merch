@@ -1,85 +1,89 @@
 {% include "./components/header.html" %}
-<div class="checkout-page">
-    <div class="order-form">
-        <h2>ОФОРМЛЕННЯ ЗАМОВЛЕННЯ</h2>
-      
+<form id="myForm" class="checkout-page">
+        <div class="order-form">
+            <h2>ОФОРМЛЕННЯ ЗАМОВЛЕННЯ</h2>
+            <div>
+                <div class="form-group" >
+                    <input type="text" class="" id="second-name-input" placeholder="Прізвище*">
+                    <input type="text" class="" id="name-input" placeholder="Ім'я*">
+                    <input type="text" class="" id="father-name-input" placeholder="По батькові*">
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" class="" id="email-input" placeholder="E-Mail*">
+                    <input type="tel" class="" id="phone-input" placeholder="Телефон*">
+                </div>
+                <textarea placeholder="Коментар до замовлення"></textarea>
+            </div>
+        </div>
+
+        <!-- <div style="border: solid 4px black; height: 400px; width: 400px; overflow-y: auto;">
+            <div style="margin: 30px; background-color: brown; height: 100px;">Product1</div>
+
+        </div> -->
+
+        <div class="cart-summary">
+            <div style="display: flex;">
+                <h2 id="cart-title">ВАШ КОШИК</h2>
+                <p class="error-message-cart" style="color: red; display: none;">Не обраний розмір!</p>
+            </div>
+            <div class="cart-item-payment-container">
+
+                
+            </div>
         
-        <form>
-            <div class="form-group">
-                <input type="text" class="" id="name-input" placeholder="Ім'я*">
-                <input type="text" class="" id="second-name-input" placeholder="Прізвище*">
+            <div class="total-price">РАЗОМ &nbsp;₴<div class="total-price-valye"></div></div>
+        </div>
+
+        <div class="delivery-options">
+            <div class="logo-text-wrapper">
+                <div class="main-text-wrapper">
+                    <h2>ОБЕРІТЬ СПОСІБ ДОСТАВКИ</h2>
+                    <h3>Доставляємо, тільки Новою Поштою</h3>
+                </div>
+                <img src="../static/public/nova-post-logo.png" alt="" class="nova-post-logo">
             </div>
-            <div class="form-group">
-                <input type="email" class="" id="email-input" placeholder="E-Mail*">
-                <input type="text" class="" id="phone-input" placeholder="Телефон*">
+
+
+            <div class="select-group">
+                <div class="select-wrapper">
+                    
+                    <input list="regions" class="" id="region-input" placeholder="Область*" >
+                    <datalist id="regions"></datalist>
+                    <h1>1. Оберіть область</h1>
+                </div>
+
+                <div class="select-wrapper">
+                    
+                    <input list="citys" id="city-input" placeholder="Місто*" >
+                    <datalist id="citys"></datalist>
+                    <h1>2. Оберіть місто</h1>
+                </div>
+
+                <div class="select-wrapper">
+                    
+                    <input list="Warehouses" id="Warehouse-input" placeholder="Відділення*" >
+                    <datalist id="Warehouses"></datalist>
+                    <h1>3. Оберіть відділення</h1>
+                </div>
             </div>
-            <textarea placeholder="Коментар до замовлення"></textarea>
-        </form>
+
+        </div>
+        <div class="payment-options">
+            <h2>ОБЕРІТЬ СПОСІБ ОПЛАТИ</h2>
+            <div class="adres-or-poshtomat-chooser">
+                <label id="method-checkbox-text"><input id="method-checkbox" type="checkbox"  checked > Накладний платіж*</label>
+                <label><input type="checkbox" disabled> Повна оплата на карту у розробці&#41;</label>
+            </div>
+        </div>
+        <button class="confirm-order-btn" type="submit">ПІДТВЕРДИТИ ЗАМОВЛЕННЯ</button>
+</form>
+<p style="width: 100%; padding: 0px 0px 0px 20px; color: #999; margin: 0px;">Нажимаючи цю кнопку, ви даєте згоду на обробку вище вказаних даних, та погоджуєтесь з <a style="color: #464646;" href="/policy">Політикою Використання</a></p>
+
+<div class="succeed-payment-container">
+    <div class="succeed-payment-wrapper">
+        <h1 class="succeed-payment-message"></h1>
+        <h2 class="succeed-payment-message-telegram">Дякуємо вам, очікуйте на зворотній звязок на пошту!</h2>
+        <button class="succeed-payment-close">Гаразд!</button>
     </div>
-
-    <!-- <div style="border: solid 4px black; height: 400px; width: 400px; overflow-y: auto;">
-        <div style="margin: 30px; background-color: brown; height: 100px;">Product1</div>
-
-    </div> -->
-
-    <div class="cart-summary">
-        <div style="display: flex;">
-            <h2 id="cart-title">ВАШ КОШИК</h2>
-            <p class="error-message-cart" style="color: red; display: none;">Не обраний розмір!</p>
-        </div>
-        <div class="cart-item-payment-container">
-
-            
-        </div>
-       
-        <div class="total-price">РАЗОМ &nbsp;₴<div class="total-price-valye"></div></div>
-    </div>
-
-    <div class="delivery-options">
-        <div class="logo-text-wrapper">
-            <div class="main-text-wrapper">
-                <h2>ОБЕРІТЬ СПОСІБ ДОСТАВКИ</h2>
-                <h3>Доставляємо, тільки Новою Поштою</h3>
-            </div>
-            <img src="../static/public/nova-post-logo.png" alt="" class="nova-post-logo">
-        </div>
-
-
-        <div class="select-group">
-            <div class="select-wrapper">
-                
-                <input list="regions" class="" id="region-input" placeholder="Область*" >
-                <datalist id="regions"></datalist>
-                <h1>1. Оберіть область</h1>
-            </div>
-
-            <div class="select-wrapper">
-                
-                <input list="citys" id="city-input" placeholder="Місто*" >
-                <datalist id="citys"></datalist>
-                <h1>2. Оберіть місто</h1>
-            </div>
-
-            <div class="select-wrapper">
-                
-                <input list="Warehouses" id="Warehouse-input" placeholder="Відділення*" >
-                <datalist id="Warehouses"></datalist>
-                <h1>3. Оберіть відділення</h1>
-            </div>
-        </div>
-
-    </div>
-    <div class="payment-options">
-        <h2>ОБЕРІТЬ СПОСІБ ОПЛАТИ</h2>
-        <div class="adres-or-poshtomat-chooser">
-            <label id="method-checkbox-text"><input id="method-checkbox" type="checkbox"  checked > Накладний платіж*</label>
-            <label><input type="checkbox" disabled> Повна оплата на карту у розробці&#41;</label>
-        </div>
-    </div>
-    <button class="confirm-order-btn" >ПІДТВЕРДИТИ ЗАМОВЛЕННЯ</button>
-
-    
-
 </div>
-
 {% include "./components/footer.html" %}

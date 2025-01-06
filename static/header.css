@@ -56,7 +56,8 @@
     position: relative;
     width: 35px;
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+    gap: 5px
 }
 
 .cart-container {
@@ -67,7 +68,8 @@
     position: relative;
     width: 35px;
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+    gap: 5px
 }
 
 .likeDropdownChild {
@@ -288,6 +290,12 @@
     color: #000000;
     text-decoration: none;
     font-weight: bolder;
+    font-size: 24px;
+    width: 90%;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
 }
 
 .likedGoodsContentElement{
@@ -324,10 +332,6 @@
 
 }
 
-.InfoMainTextElement{
-    font-size: 24px;
-}
-
 .InfoMainElementWraper{
     display: flex;
 }
@@ -343,6 +347,10 @@
     font-weight: 450;
     margin-left: 5px;
     margin-bottom: 5px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
 }
 
 .InfoMainSizeElementLabel{
@@ -356,6 +364,10 @@
     font-weight: 450;
     margin-left: 5px;
     margin-bottom: 5px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
 }
 
 .InfoColorMainElementLabel{
@@ -369,6 +381,10 @@
     font-weight: 450;
     margin-left: 5px;
     margin-bottom: 5px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
 }
 
 .InfoPriceColorElement{

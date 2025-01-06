@@ -20,7 +20,6 @@ class Good(db.Model):
     code: Mapped[int] = mapped_column(Integer, nullable=False)
     price: Mapped[int] = mapped_column(Integer, nullable=False)
     color: Mapped[str] = mapped_column(String, nullable=False)
-    size: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False)
     made_of: Mapped[str] = mapped_column(Text, nullable=False)
     addedAt: Mapped[DateTime] = mapped_column(DateTime, nullable=False, default=func.now())

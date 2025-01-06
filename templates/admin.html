@@ -7,19 +7,37 @@
   <h2>Назва</h2>
   <label for=""><input style="margin-bottom: 40px;" type="name" name="name" required="required" /></label>
   <h2>Картинка спереду</h2>
-  <label for=""><input style="margin-bottom: 40px;" type="img_url_front" name="img_url_front" required="required" /></label>
+  <label for=""><textarea style="margin-bottom: 40px; width: 400px; border: 1px solid black;" type="img_url_front" name="img_url_front" required="required" > </textarea></label>
   <h2>Картинка ззаду</h2>
-  <label for=""><input style="margin-bottom: 40px;" type="img_url_back" name="img_url_back" required="required" /></label>
+  <label for=""><textarea style="margin-bottom: 40px; width: 400px; border: 1px solid black;" type="img_url_back" name="img_url_back" required="required" > </textarea> </label>
   <h2>Артикул</h2>
   <label for=""><input style="margin-bottom: 40px;" type="code" name="code" required="required" /></label>
   <h2>Ціна</h2>
-  <label for=""><input style="margin-bottom: 40px;" type="price" name="price" required="required" /></label>
+  <label for=""><input style="margin-bottom: 40px;" type="number" name="price" required="required" /></label>
   <h2>Колір</h2>
   <label for=""><input style="margin-bottom: 40px;" name="color" required="required" /></label>
   <h2>Опис</h2>
-  <label for=""><input style="margin-bottom: 40px;" type="description" name="description" required="required" /></label>
+  <label for=""><textarea style="margin-bottom: 40px; width: 400px; border: 1px solid black;" type="description" name="description" required="required" ></textarea> </label>
   <h2>Склад та догляд</h2>
-  <label for=""><input style="margin-bottom: 40px;" type="made_of" name="made_of" required="required" /></label>
+  <label for=""><textarea style="margin-bottom: 40px; width: 400px; border: 1px solid black;" type="made_of" name="made_of" required="required"></textarea> </label> <br>
   <button type="submit">Add good</button>
 </form>
+
+<div style="width: 600px;">
+  {% for good in all_goods %}
+  <div class="good-catalog-wrapper">
+      <div class="options-good-catalog-flex">
+        <a href="{{url_for('delete_product', product_id=good.id) }}"><img style="width: 40px; margin: 20px;" class="trash" src="../static/public/trash.png" alt="trash icon"></a>
+      </div>
+      <a class="good-item-wraper" href = "{{url_for('good', id=good.id)}}">
+          <div class="good-item-container">
+              <img class="good-item good-item-original" src="{{good.img_url_front}}" alt="good item"/>
+              <img class="good-item good-item-hover" src="{{good.img_url_back}}" alt="good item"/>
+          </div>
+          <div class="good-name" >{{good.name}}</div>
+          <div class="good-price">₴{{good.price}}</div>
+      </a>
+  </div> 
+  {% endfor %}
+</div>
 {% include "./components/footer.html" %}

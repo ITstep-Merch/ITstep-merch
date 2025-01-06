@@ -2,6 +2,10 @@
   <footer></footer>
   <script>
 
+    if(document.getElementById('myForm')){
+      document.getElementById('myForm').addEventListener('submit', sendFormToTelegram);
+    }
+   
     function toggleVisibility(activeElement, inactiveElement) {
 
       const inactive = document.querySelector(inactiveElement);
@@ -40,8 +44,6 @@
       }
     }
 
-    
-  
     function initializeCartsCounter() {
       const cartsCounter = document.querySelector('.carts-counter');
       cartCounterOnPage = 0;
@@ -155,79 +157,122 @@
     }
     
   
-        async function saveGoodToLocalStorageCart(ID) {
-          console.log('jjj',ID)
-          
-          const response = await fetch(`/get_good_cart/${ID}`);
-          const goodCartRes = await response.json();
+    async function saveGoodToLocalStorageCart(ID) {
+      console.log('jjj',ID)
+      
+      const response = await fetch(`/get_good_cart/${ID}`);
+      const goodCartRes = await response.json();
 
-          let getSize = "Не обрано"
+      let getSize = "Не обрано"
 
-          try {
-            const sizeElement = document.getElementById("size");
-            if (sizeElement) {
-              getSize = sizeElement.value
-            }
-          } catch (error) {
-            console.error("Error getting size element:", error);
-          }
-          
-          const goodCart = {
-              src: goodCartRes.src,
-              name: goodCartRes.name, 
-              code: goodCartRes.code,
-              size: getSize,
-              color: goodCartRes.color,
-              price: goodCartRes.price, 
-              id: goodCartRes.id,
-              option: "Cart"
-          }
-  
-          localStorage.setItem(ID, JSON.stringify(goodCart));
-  
-          initializeCartsCounter()
-          displayCartedItems()
+      try {
+        const sizeElement = document.getElementById("size");
+        if (sizeElement) {
+          getSize = sizeElement.value
         }
-        
-  
-        function toggleLike(ID){
-          findElementLikeButton = document.getElementById(ID)
-          console.log(ID)
-          const isLiked = findElementLikeButton.classList.contains('liked');
-          findElementLikeButton.classList.toggle('liked')
-          const likesCounter = document.querySelector('.likes-counter');
-  
-          if (isLiked) {
-            localStorage.removeItem(ID)
-            likeCounter -= 1;
-            likesCounter.textContent = likeCounter;
-          } else {
-            saveGoodToLocalStorage(ID);
-          }
-          displayLikedItems()
+      } catch (error) {
+        console.error("Error getting size element:", error);
+      }
+      
+      const goodCart = {
+          src: goodCartRes.src,
+          name: goodCartRes.name, 
+          code: goodCartRes.code,
+          size: getSize,
+          color: goodCartRes.color,
+          price: goodCartRes.price, 
+          id: goodCartRes.id,
+          option: "Cart"
+      }
+
+      localStorage.setItem(ID, JSON.stringify(goodCart));
+
+      initializeCartsCounter()
+      displayCartedItems()
+    }
+    
+
+    function toggleLike(ID){
+
+      console.log("ID", ID)      
+      const likesCounter = document.querySelector('.likes-counter');
+      findElementLikeButton = document.getElementById(ID)
+      const isHomePage = window.location.pathname === '/';
+
+      if (findElementLikeButton == null) {
+        localStorage.removeItem(ID)
+        displayLikedItems()
+        likeCounter -= 1;
+        likesCounter.textContent = likeCounter;
+      }
+
+      if (localStorage.getItem(ID) || isHomePage) {
+        console.log("findElementLikeButton", findElementLikeButton)
+        const isLiked = findElementLikeButton.classList.contains('liked');
+        findElementLikeButton.classList.toggle('liked')
+        if (isLiked) {
+          localStorage.removeItem(ID)
+          likeCounter -= 1;
+          likesCounter.textContent = likeCounter;
+        } else {
+        saveGoodToLocalStorage(ID);
         }
-        console.log("!!!!!!!!!")
-  
-        function toggleCart(ID){   
-  
-            console.log(ID)
-            findElementCartButton = document.getElementById(ID)
-            console.log("findElementCartButton", findElementCartButton)
-            const isCarted = findElementCartButton.classList.contains('carted');
-            if (window.location.pathname === '/') { 
-              findElementCartButton.classList.toggle('carted')
-            }
-            const cartsCounter = document.querySelector('.carts-counter');
-            if (isCarted) {
-              localStorage.removeItem(ID)
-              cartCounterOnPage -= 1;
-              cartsCounter.textContent = cartCounterOnPage;
-            } else {
-              saveGoodToLocalStorageCart(ID);
-            }
-            displayCartedItems()
-          
+        displayLikedItems()
+        return
+      } else {
+        findElementLikeButton = localStorage.getItem(ID)
+        if (findElementLikeButton) {
+          localStorage.removeItem(ID)
+          likeCounter -= 1;
+          likesCounter.textContent = likeCounter;
+        } else {
+          saveGoodToLocalStorage(ID);
         }
+        displayLikedItems()
+        return
+      }
+    }
+
+    function toggleCart(ID){   
+
+      console.log("ID", ID)
+      findElementCartButton = document.getElementById(ID)
+      const isHomePage = window.location.pathname === '/';
+      const cartsCounter = document.querySelector('.carts-counter');
+
+      if (findElementCartButton == null) {
+        localStorage.removeItem(ID)
+        displayCartedItems()
+        cartCounterOnPage -= 1;
+        cartsCounter.textContent = cartCounterOnPage;
+      }
+
+      if(isHomePage){
+        console.log("findElementCartButton", findElementCartButton)
+        const isCarted = findElementCartButton.classList.contains('carted');
+        findElementCartButton.classList.toggle('carted')
+        if (isCarted) {
+          localStorage.removeItem(ID)
+          cartCounterOnPage -= 1;
+          cartsCounter.textContent = cartCounterOnPage;
+        } else {
+          saveGoodToLocalStorageCart(ID);
+        }
+        displayCartedItems()
+        return
+      }else{
+        findElementCartButton = localStorage.getItem(ID)
+        if (findElementCartButton) {
+          localStorage.removeItem(ID)
+          cartCounterOnPage -= 1;
+          cartsCounter.textContent = cartCounterOnPage;
+        } else {
+          saveGoodToLocalStorageCart(ID);
+        }
+        displayCartedItems()
+        return
+      }
+    }
   
         function togglePayment(ID){   
           findElementCartButton = document.getElementById(ID)
@@ -855,8 +900,11 @@
 
 
         //Робота з кнопкою на сторінці пеймент, не доступна, якщо якесь з полів не заповнине
+
+        
         const nameInput = document.getElementById('name-input');
         const secondNameInput = document.getElementById('second-name-input');
+        const fatherNameInput = document.getElementById('father-name-input');
         const emailInput = document.getElementById('email-input');
         const phoneInput = document.getElementById('phone-input');
         const confirmOrderBtn = document.querySelector('.confirm-order-btn');
@@ -883,6 +931,16 @@
               secondNameInput.classList.remove('error'); 
             } else {
               secondNameInput.classList.add('error');
+            }
+          });
+        }
+
+        if(fatherNameInput){
+          fatherNameInput.addEventListener('input', () => {
+            if (fatherNameInput.value.trim() !== '') {
+              fatherNameInput.classList.remove('error'); 
+            } else {
+              fatherNameInput.classList.add('error');
             }
           });
         }
@@ -947,159 +1005,174 @@
           });
         }
 
-        if(confirmOrderBtn){
-          confirmOrderBtn.addEventListener('click', async (event) => {
+        function showModal(message) {
+          const succeed = document.querySelector(".succeed-payment-container");
+          const succeedMessage = document.querySelector(".succeed-payment-message");
+          const succeedModal = document.querySelector(".succeed-payment-close");
+          console.log("message", message)
 
-            const cartedItems =  getItemsFromStorageCart();
-            console.log("cartedItems", cartedItems)
-            const cartTitle = document.getElementById('cart-title');
+          succeedMessage.textContent = message;
+          succeed.style.display = "block";
 
-            cartedItems.forEach(item => {
-              if (item.size == "Не обрано") {
-                event.preventDefault(); 
-                const errorMessageCart = document.querySelector('.error-message-cart');
-                errorMessageCart.style.display = 'block';
+          succeedModal.onclick = function () {
+            window.location.href = "/";
+          };
+        }
 
-                cartTitle.insertAdjacentElement('afterend', errorMessageCart); 
-              }
-            });
+        async function sendFormToTelegram()  {
+          event.preventDefault();
 
-            const isFormValid = nameInput.value.trim() !== '' &&
-                                secondNameInput.value.trim() !== '' &&
-                                emailInput.value.trim() !== '' &&
-                                phoneInput.value.trim() !== '' &&
-                                oblastInput.value.trim() !== '' &&
-                                cityInputForCheck.value.trim() !== '' && 
-                                warehouseInput.value.trim() !== '' &&
-                                methodCheckbox.checked &&
-                                !cartedItems.some(item => item.size === "Не обрано");
+          const cartedItems =  getItemsFromStorageCart();
+          console.log("cartedItems", cartedItems)
+          const cartTitle = document.getElementById('cart-title');
 
-            if (!isFormValid) {
-              event.preventDefault();
-              if (nameInput.value.trim() === '') {
-                nameInput.classList.add('error');
-              }
+          cartedItems.forEach(item => {
+            if (item.size == "Не обрано") {
+              event.preventDefault(); 
+              const errorMessageCart = document.querySelector('.error-message-cart');
+              errorMessageCart.style.display = 'block';
 
-              if (oblastInput.value.trim() === '') {
-                oblastInput.classList.add('error');
-              }
+              cartTitle.insertAdjacentElement('afterend', errorMessageCart); 
+            }
+          });
 
-              if (cityInputForCheck.value.trim() === '') {
-                cityInputForCheck.classList.add('error');
-              }
+          const isFormValid = nameInput.value.trim() !== '' &&
+                              secondNameInput.value.trim() !== '' &&
+                              fatherNameInput.value.trim() !== '' &&
+                              emailInput.value.trim() !== '' &&
+                              phoneInput.value.trim() !== '' &&
+                              oblastInput.value.trim() !== '' &&
+                              cityInputForCheck.value.trim() !== '' && 
+                              warehouseInput.value.trim() !== '' &&
+                              methodCheckbox.checked &&
+                              !cartedItems.some(item => item.size === "Не обрано");
 
-              if (warehouseInput.value.trim() === '') {
-                warehouseInput.classList.add('error');
-              }
-
-              if (!methodCheckbox.checked){
-                methodCheckboxText.classList.add('error-checkbox-text');
-              }
-
-              if (secondNameInput.value.trim() === '') {
-                secondNameInput.classList.add('error');
-              }
-
-              if (emailInput.value.trim() === '') {
-                emailInput.classList.add('error');
-              }
-
-              if (phoneInput.value.trim() === '') {
-                phoneInput.classList.add('error');
-              }
-
-              return
+          if (!isFormValid) {
+            event.preventDefault();
+            if (fatherNameInput.value.trim() === '') {
+              fatherNameInput.classList.add('error');
             }
 
-            console.log("document",document.querySelector("input[list=regions]").value);
-            
-
-
-
-            const nameTELEGRAM = document.getElementById("name-input").value;
-            const secondNameTELEGRAM = document.getElementById("second-name-input").value;
-            const emailTELEGRAM = document.getElementById("email-input").value;
-            const phoneTELEGRAM = document.getElementById("phone-input").value;
-            const commentTELEGRAM = document.querySelector("textarea").value;
-            const regionTELEGRAM = document.getElementById("region-input").value;
-            const cityTELEGRAM = document.getElementById("city-input").value;
-            const warehouseTELEGRAM = document.getElementById("Warehouse-input").value;
-            const paymentMethodTELEGRAM = document.getElementById("method-checkbox").checked ? "Накладний платіж" : "Повна оплата";
-
-            const cartItemPaymentContainerTELEFRAM = document.querySelector(".cart-item-payment-container");
-            console.log("cartItemPaymentContainer", cartItemPaymentContainerTELEFRAM)
-
-            const goodNameTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainTextElement")).map(item => item.textContent)
-            console.log("goodNameTELEGRAM", goodNameTELEGRAM)
-
-            const InfoMainCodeElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainCodeElementValue")).map(item => item.textContent)
-            console.log("InfoMainCodeElementValueTELEGRAM", InfoMainCodeElementValueTELEGRAM)
-
-            const InfoMainSizeElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainSizeElementValue")).map(item => item.textContent)
-            console.log("InfoMainSizeElementValueTELEGRAM", InfoMainSizeElementValueTELEGRAM)
-
-            const InfoColorMainElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoColorMainElementValue")).map(item => item.textContent)
-            console.log("InfoColorMainElementValueTELEGRAM", InfoColorMainElementValueTELEGRAM)
-
-            const InfoPriceColorElementTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoPriceColorElement")).map(item => item.textContent)
-            console.log("InfoPriceColorElementTELEGRAM", InfoPriceColorElementTELEGRAM)
-
-            const goodsToBuyTELEGRAM = []
-
-            goodNameTELEGRAM.forEach((goodName, index) => {
-              goodsToBuyTELEGRAM.push({
-                name: goodName,
-                code: InfoMainCodeElementValueTELEGRAM[index],
-                size: InfoMainSizeElementValueTELEGRAM[index],
-                color: InfoColorMainElementValueTELEGRAM[index],
-                price: InfoPriceColorElementTELEGRAM[index],
-              });
-            });
-            console.log("goodsToBuyTELEGRAM", goodsToBuyTELEGRAM)
-
-
-
-            const orderData = {
-              nameTELEGRAM,
-              secondNameTELEGRAM,
-              emailTELEGRAM,
-              phoneTELEGRAM,
-              commentTELEGRAM,
-              regionTELEGRAM,
-              cityTELEGRAM,
-              warehouseTELEGRAM,
-              paymentMethodTELEGRAM,
-              goodsToBuyTELEGRAM,
-            };
-            console.log("orderData", orderData)
-
-            try {
-              const response = await fetch("/new_order", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(orderData),
-              });
-
-              const result = await response.json();
-              if (result.status === "success") {
-                alert("Замовлення успішно відправлене!");
-              } else {
-                alert("Помилка при відправці замовлення: " + result.message);
-              }
-            } catch (error) {
-              alert("Сталася помилка: " + error.message);
+            if (nameInput.value.trim() === '') {
+              nameInput.classList.add('error');
             }
 
+            if (oblastInput.value.trim() === '') {
+              oblastInput.classList.add('error');
+            }
+
+            if (cityInputForCheck.value.trim() === '') {
+              cityInputForCheck.classList.add('error');
+            }
+
+            if (warehouseInput.value.trim() === '') {
+              warehouseInput.classList.add('error');
+            }
+
+            if (!methodCheckbox.checked){
+              methodCheckboxText.classList.add('error-checkbox-text');
+            }
+
+            if (secondNameInput.value.trim() === '') {
+              secondNameInput.classList.add('error');
+            }
+
+            if (emailInput.value.trim() === '') {
+              emailInput.classList.add('error');
+            }
+
+            if (phoneInput.value.trim() === '') {
+              phoneInput.classList.add('error');
+            }
+
+            return
+          }
+
+          const nameTELEGRAM = document.getElementById("name-input").value;
+          const secondNameTELEGRAM = document.getElementById("second-name-input").value;
+          const fatherNameTELEGRAM = document.getElementById("father-name-input").value;
+          const emailTELEGRAM = document.getElementById("email-input").value;
+          const phoneTELEGRAM = document.getElementById("phone-input").value;
+          const commentTELEGRAM = document.querySelector("textarea").value;
+          const regionTELEGRAM = document.getElementById("region-input").value;
+          const cityTELEGRAM = document.getElementById("city-input").value;
+          const warehouseTELEGRAM = document.getElementById("Warehouse-input").value;
+          const totalTELEGRAM = document.querySelector(".total-price-valye");
+          console.log("totalTELEGRAM",totalTELEGRAM)
+          const paymentMethodTELEGRAM = document.getElementById("method-checkbox").checked ? "Накладний платіж" : "Повна оплата";
+
+          const cartItemPaymentContainerTELEFRAM = document.querySelector(".cart-item-payment-container");
+          console.log("cartItemPaymentContainer", cartItemPaymentContainerTELEFRAM)
+
+          const goodNameTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainTextElement")).map(item => item.textContent)
+          console.log("goodNameTELEGRAM", goodNameTELEGRAM)
+
+          const InfoMainCodeElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainCodeElementValue")).map(item => item.textContent)
+          console.log("InfoMainCodeElementValueTELEGRAM", InfoMainCodeElementValueTELEGRAM)
+
+          const InfoMainSizeElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoMainSizeElementValue")).map(item => item.textContent)
+          console.log("InfoMainSizeElementValueTELEGRAM", InfoMainSizeElementValueTELEGRAM)
+
+          const InfoColorMainElementValueTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoColorMainElementValue")).map(item => item.textContent)
+          console.log("InfoColorMainElementValueTELEGRAM", InfoColorMainElementValueTELEGRAM)
+
+          const InfoPriceColorElementTELEGRAM = Array.from(cartItemPaymentContainerTELEFRAM.querySelectorAll(".InfoPriceColorElement")).map(item => item.textContent)
+          console.log("InfoPriceColorElementTELEGRAM", InfoPriceColorElementTELEGRAM)
+
+          const goodsToBuyTELEGRAM = []
+
+          goodNameTELEGRAM.forEach((goodName, index) => {
+            goodsToBuyTELEGRAM.push({
+              name: goodName,
+              code: InfoMainCodeElementValueTELEGRAM[index],
+              size: InfoMainSizeElementValueTELEGRAM[index],
+              color: InfoColorMainElementValueTELEGRAM[index],
+              price: InfoPriceColorElementTELEGRAM[index],
+            });
+          });
+          console.log("goodsToBuyTELEGRAM", goodsToBuyTELEGRAM)
 
 
 
-          })
-        };
+          const orderData = {
+            nameTELEGRAM,
+            secondNameTELEGRAM,
+            fatherNameTELEGRAM,
+            emailTELEGRAM,
+            phoneTELEGRAM,
+            commentTELEGRAM,
+            regionTELEGRAM,
+            cityTELEGRAM,
+            warehouseTELEGRAM,
+            paymentMethodTELEGRAM,
+            goodsToBuyTELEGRAM,
+            totalTELEGRAM,
+          };
+          console.log("orderData", orderData)
+
+          try {
+            const response = await fetch("/new_order", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(orderData),
+            });
+
+            const result = await response.json();
+            if (result.status === "success") {
+              showModal("Замовлення успішно відправлене!");
+              for (const key of Object.keys(localStorage)) {
+                if (key.includes("cart")) {
+                  localStorage.removeItem(key);
+                }
+              }
+            } else {
+              showModal("Помилка при відправці замовлення: " + result.message);
+            }
+          } catch (error) {
+            showModal("Сталася помилка: " + error.message);
+          }
+        }
         //Робота з кнопкою на сторінці пеймент, не доступна, якщо якесь з полів не заповнине
-
-
-
-
 
 
         const meterOverlay = document.querySelector('.meter-overlay');
