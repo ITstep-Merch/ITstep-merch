@@ -1,27 +1,78 @@
 {% include "./components/header.html" %}
 <div class="goodcontainer">
   <div class="bg-good-container">
-    <div class="good-img"></div>
+    <div class="good-img">
+      <img src="{{good.img_url_front}}" alt="hdeu" style="width: 100%;"/>
+    </div>
   </div>
   <div class="good-info">
-    <div class="good-name">Футболка крута</div>
-    <div class="artcl">Артикул: 00000031425</div>
-    <div class="good-price">100$</div>
-    <div class="color-name">Колір:</div>
-    <div class="colors-available">...</div>
-    <div class="size-name">Розмір:</div>
-    <div class="size-available">S M L</div>
-    <div class="description-header">Опис:</div>
-    <div class="description">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, similique at. Obcaecati, deserunt delectus suscipit adipisci veniam optio corrupti
-      quasi exercitationem quisquam ipsam! Incidunt eos at amet libero nisi maiores.
+    <div class="good-name">{{good.name}}</div>
+    <div class="artcl">Артикул: {{good.code}}</div>
+    <div class="good-price">₴{{good.price}}</div>
+    <div class="color-name">Колір:&nbsp;<div style="font-weight:500;">{{good.color}}</div></div>
+    <div class="size-name">Розмір: 
+      <label style="width: 125px; display: flex; justify-content: center; align-items: center;">
+        <select id="size" class="size-name-datalist" name="test">
+          <option value="Не обрано">Не обрано</option>
+          <option>XS</option>
+          <option>S</option>
+          <option>M</option>
+          <option>L</option>
+          <option>XL</option>
+          <option>XXL</option>
+        </select>
+      </label>  
+    <button class="meter-for-body">
+      <div class="meter-for-body-background"></div>
+    </button>
     </div>
-    <div class="composition-and-care-header">Склад та доглад:</div>
-    <div class="composition-and-care">
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Unde quo quae excepturi iusto beatae, numquam repellendus nam tenetur labore inventore
-      odit. Mollitia, saepe facere sequi accusantium id magni quasi dolore.
+    
+    <div class="product-details">
+      <div class="description-header">Опис:</div>
+      <div class="description closeDescription" onclick="toggleDescription()">{{good.description}}</div>
+      <div class="composition-and-care-header">Склад та доглад:</div>
+      <div class="composition-and-care closeCare" onclick="toggleCare()">{{good.made_of}}</div>
     </div>
-    <button class="add-to-cart-btn">ДОДАТИ В КОШИК</button>
+    <button class="add-to-cart-btn-button" onclick="saveGoodToLocalStorageCart('cart-{{good.id}}')"><a href="/" class="add-to-cart-btn">ДОДАТИ В КОШИК</a></button>
   </div>
+</div>
+
+
+<div class="meter-overlay"></div>
+<div class="meter-table-container">
+
+  <div class="meter-table-container-title-container"> <h1>Таблиця розмірів</h1> <div class="meter-table-container-close-button">&times;</div> </div>
+
+  <hr/>
+
+  <div class="tabs">
+
+    <button class="tab-button active" onclick="showTab('size-chart')">Розмірна сітка</button>
+    <button class="tab-button" onclick="showTab('how-to-measure')">Як зняти мірки?</button>
+
+  </div>
+  
+  <div id="size-chart" class="tab-content">
+    <p>Тут буде розмірна сітка (замість цього додайте потрібний контент).</p>
+  </div>
+  
+  <div id="how-to-measure" class="tab-content hidden">
+    <div class="tab-content-wrapper">
+      <img class="how-to-measure-photo" src=".././static/public/meter-how-to.png"/> 
+      <div class="how-to-measure-text">
+        <h1>Як правильно знімати мірки</h1>
+        <h2><strong>1. Обхват грудей.</strong> Оберніть сантиметр навколо найоб'ємнішої і виступаючої частини грудей, наполовину вдихніть і зафіксуйте обсяг.</h2>
+        <h2><strong>2. Обхват талії.</strong> Оберніть сантиметр навколо найтоншої частини талії, вимірюйте напів вдихаючи. Не втягуйте і не надувайте живіт під час вимірювання.</h2>
+        <h2><strong>3. Ширина плеча.</strong> Тримаючі сантиметр перед собою, зафіксуйте відстань від краю одного плеча до краю іншого. Не потрібно обертати плечі по колу, для цієї мірки потрібен «напівобхват».</h2>
+        <h2><strong>4. Обхват стегон.</strong> Вимірюється по найоб'ємнішій частині сідниць, приблизно на рівні кульшових суглобів.</h2>
+        <h2><strong>5. Довжина рукава.</strong> Витягнувши руку наполовину, або тримаючи прямо, але ні в якому разі, не згинаючи, виміряйте відстань від плеча до зап'ястя.</h2>
+        <h2><strong>6. Довжина ноги.</strong> Стоячи прямо, виміряйте відстань від паху до кісточки на щиколотці.</h2>
+        <h2><strong>7. Обхват шиї.</strong> Вимірюється основа шиї безпосередньо над ключицею.</h2>
+      </div>
+    </div>
+    
+  </div>
+
+  
 </div>
 {% include "./components/footer.html" %}

@@ -1,5 +1,11 @@
 </div>
-       <footer>
-        </footer>
-    </body>
+  <footer></footer>
+
+    <script>
+      const baseGoodUrl = "{{ url_for('good', id='') }}";
+    </script>
+
+    <script type="module" src="{{ url_for('static', filename='script/index.js') }}"></script>
+    
+  </body>
 </html>
