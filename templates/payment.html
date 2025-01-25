@@ -16,11 +16,6 @@
             </div>
         </div>
 
-        <!-- <div style="border: solid 4px black; height: 400px; width: 400px; overflow-y: auto;">
-            <div style="margin: 30px; background-color: brown; height: 100px;">Product1</div>
-
-        </div> -->
-
         <div class="cart-summary">
             <div style="display: flex;">
                 <h2 id="cart-title">ВАШ КОШИК</h2>
@@ -37,7 +32,7 @@
         <div class="delivery-options">
             <div class="logo-text-wrapper">
                 <div class="main-text-wrapper">
-                    <h2>ОБЕРІТЬ СПОСІБ ДОСТАВКИ</h2>
+                    <h2>ОБЕРІТЬ МЕТОД ДОСТАВКИ</h2>
                     <h3>Доставляємо, тільки Новою Поштою</h3>
                 </div>
                 <img src="../static/public/nova-post-logo.png" alt="" class="nova-post-logo">
@@ -62,12 +57,49 @@
                 <div class="select-wrapper">
                     
                     <input list="Warehouses" id="Warehouse-input" placeholder="Відділення*" >
-                    <datalist id="Warehouses"></datalist>
+                    <datalist id="Warehouses">
+                    </datalist>
                     <h1>3. Оберіть відділення</h1>
                 </div>
             </div>
 
         </div>
+
+        <!-- <div class="delivery-options-postmat">
+            <div class="logo-text-wrapper-postmat">
+                <div class="main-text-wrapper">
+                    <h2>ОБЕРІТЬ ПОШТОМАТ ДОСТАВКИ</h2>
+                    <h3>Доставляємо, тільки Новою Поштою</h3>
+                </div>
+                <img src="../static/public/nova-post-logo.png" alt="" class="nova-post-logo-postmat">
+            </div>
+
+
+            <div class="select-group-postmat">
+                <div class="select-wrapper-postmat">
+                    
+                    <input list="regions-postmat" class="" id="region-input-postmat" placeholder="Область*" >
+                    <datalist id="regions-postmat"></datalist>
+                    <h1>1. Оберіть область</h1>
+                </div>
+
+                <div class="select-wrapper-postmat">
+                    
+                    <input list="citys-postmat" id="city-input-postmat" placeholder="Місто*" >
+                    <datalist id="citys-postmat"></datalist>
+                    <h1>2. Оберіть місто</h1>
+                </div>
+
+                <div class="select-wrapper-postmat">
+                    
+                    <input list="Warehouses-postmat" id="Warehouse-input-postmat" placeholder="Поштомат*" >
+                    <datalist id="Warehouses-postmat"></datalist>
+                    <h1>3. Оберіть поштомат</h1>
+                </div>
+            </div>
+
+        </div> -->
+
         <div class="payment-options">
             <h2>ОБЕРІТЬ СПОСІБ ОПЛАТИ</h2>
             <div class="adres-or-poshtomat-chooser">
@@ -75,7 +107,10 @@
                 <label><input type="checkbox" disabled> Повна оплата на карту у розробці&#41;</label>
             </div>
         </div>
-        <button class="confirm-order-btn" type="submit">ПІДТВЕРДИТИ ЗАМОВЛЕННЯ</button>
+        <button class="confirm-order-btn" type="submit">
+            ПІДТВЕРДИТИ ЗАМОВЛЕННЯ
+            <div class="loader"></div>
+        </button>
 </form>
 <p style="width: 100%; padding: 0px 0px 0px 20px; color: #999; margin: 0px;">Нажимаючи цю кнопку, ви даєте згоду на обробку вище вказаних даних, та погоджуєтесь з <a style="color: #464646;" href="/policy">Політикою Використання</a></p>
 

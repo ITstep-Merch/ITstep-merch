@@ -9,33 +9,30 @@
     <div class="good-name">{{good.name}}</div>
     <div class="artcl">Артикул: {{good.code}}</div>
     <div class="good-price">₴{{good.price}}</div>
-    <div class="color-name">Колір: {{good.color}}</div>
-    <div class="size-name">Розмір: <label style="width: 125px; display: flex; justify-content: center; align-items: center;">
-      <select id="size" class="size-name-datalist" name="test">
-        <option>Не обрано</option>
-        <option>XS</option>
-        <option>S</option>
-        <option>M</option>
-        <option>L</option>
-        <option>XL</option>
-        <option>XXL</option>
-      </select>
-    </label>  
+    <div class="color-name">Колір:&nbsp;<div style="font-weight:500;">{{good.color}}</div></div>
+    <div class="size-name">Розмір: 
+      <label style="width: 125px; display: flex; justify-content: center; align-items: center;">
+        <select id="size" class="size-name-datalist" name="test">
+          <option value="Не обрано">Не обрано</option>
+          <option>XS</option>
+          <option>S</option>
+          <option>M</option>
+          <option>L</option>
+          <option>XL</option>
+          <option>XXL</option>
+        </select>
+      </label>  
     <button class="meter-for-body">
       <div class="meter-for-body-background"></div>
     </button>
     </div>
     
-    <div class="description-header">Опис:</div>
-    <div class="description" style=" 
-      word-wrap: break-word;
-      overflow-wrap: break-word;"
-    >{{good.description}}</div>
-    <div class="composition-and-care-header">Склад та доглад:</div>
-    <div class="composition-and-care" style=" 
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    ">{{good.made_of}}</div>
+    <div class="product-details">
+      <div class="description-header">Опис:</div>
+      <div class="description closeDescription" onclick="toggleDescription()">{{good.description}}</div>
+      <div class="composition-and-care-header">Склад та доглад:</div>
+      <div class="composition-and-care closeCare" onclick="toggleCare()">{{good.made_of}}</div>
+    </div>
     <button class="add-to-cart-btn-button" onclick="saveGoodToLocalStorageCart('cart-{{good.id}}')"><a href="/" class="add-to-cart-btn">ДОДАТИ В КОШИК</a></button>
   </div>
 </div>
@@ -79,13 +76,3 @@
   
 </div>
 {% include "./components/footer.html" %}
-<!-- 
-пофіксити сітку, -очікуємо
-адаптація
-головний тект на головній сторінці
-головні фото на гоовній сторінці
-добавити юзер експіріенс в обиранні розміру на сорінці покупки
-добавити загрузку на сторінку коли іде обробка
-
-почистити футер !!!
--->

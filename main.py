@@ -1,4 +1,4 @@
-from flask import Flask, abort, render_template, redirect, url_for, jsonify, request
+from flask import Flask, abort, render_template, redirect, url_for, jsonify, request, send_from_directory
 from flask_bootstrap import Bootstrap5
 from models import db, Good
 import os
@@ -233,7 +233,7 @@ def get_wareHouse_in_city_streetAd():
                 "CityName" : nameCity,
                 "CityRef" : "",
                 "Page" : "",
-                "Limit" : "20",
+                "Limit" : "150",
                 "Language" : "UA",
                 "TypeOfWarehouseRef" : "",
                 "WarehouseId" : ""
@@ -308,6 +308,10 @@ def new_order():
     except Exception as e:
         print("Error:", str(e))
         return jsonify({"status": "error", "message": str(e)})
+    
+@app.route('/script/index.js')
+def serve_script():
+    return send_from_directory('script', 'index.js')
 
 
 if __name__ == "__main__":

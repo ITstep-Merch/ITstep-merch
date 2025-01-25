@@ -28,7 +28,7 @@
             <div class="container-like-cart">
 
               <div class="like-container">
-                <button class="like" onclick="toggleDropdownLike(); displayLikedItems(); toggleVisibility('.likeDropdownChild', '.cartDropdownChild')">
+                <button class="like" onclick="toggleDropdownLike(); toggleVisibility('.likeDropdownChild', '.cartDropdownChild'); displayLikedItems()">
                   <img src="../../static/public/likeIcon.png" alt="" class="like-img">
                 </button>
 
@@ -47,7 +47,7 @@
               </div>
 
               <div class="cart-container">
-                <button class="cart" onclick="toggleDropdownCart(); displayCartedItems(); toggleVisibility('.cartDropdownChild','.likeDropdownChild')">
+                <button class="cart" onclick="toggleDropdownCart(); toggleVisibility('.cartDropdownChild','.likeDropdownChild'); displayCartedItems()">
                   <img src="../../static/public/cartIcon.png" alt="" class="cart-img">
                 </button>
 

@@ -10,7 +10,7 @@ body {
     padding: 20px 20px 0px 20px;
 }
 
-.order-form, .cart-summary, .delivery-options, .payment-options {
+.order-form, .cart-summary, .delivery-options, .delivery-options-postmat, .payment-options {
     border: 2px solid #000;
     padding: 20px;
     background-color: #fff;
@@ -163,6 +163,10 @@ textarea {
     font-family: Montserrat, Roboto, Helvetica, Arial, sans-serif;
     position: relative;
     overflow: hidden;
+    display: flex; /* Замінили inline-flex на flex */
+    align-items: center; /* Центруємо по вертикалі */
+    justify-content: center; /* Центруємо по горизонталі */
+    gap: 10px; /* Проміжок між текстом і loader */
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
 
@@ -190,6 +194,35 @@ textarea {
 .confirm-order-btn:hover::after {
     transform: translateX(100%);
 }
+
+.loader {
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: none; /* Ховаємо loader за замовчуванням */
+}
+
+.confirm-order-btn.loading .loader {
+    display: block; /* Показуємо loader під час завантаження */
+}
+
+.confirm-order-btn.loading {
+    pointer-events: none; /* Вимикаємо кнопку під час завантаження */
+    opacity: 0.8;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 
 .select-wrapper h1{
     font-size: 10px;
@@ -219,8 +252,6 @@ textarea {
     margin-bottom: 0px;
     color: red !important;
 }
-
-
 
 .succeed-payment-container {
     display: none; 
@@ -278,3 +309,44 @@ textarea {
 .succeed-payment-close{
     margin-top: 100px;
 }
+
+.InfoMainSizeElementValuePayment{
+    font-size: 15px;
+    font-weight: 450;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
+
+.InfoMainSizeElementValuePayment {
+    font-size: 12px;
+    width: 50%;
+    padding: 2px;
+    margin-top: 3px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+    text-align-last: center;
+    height: 25px;
+    transition: border 0.25s ease;
+    margin-left: 5px;
+}
+
+.InfoMainSizeElementValuePayment:focus {
+    outline: 2px solid transparent;
+}
+
+.InfoMainSizeElementValuePayment:hover {
+    border: 2px solid #274bff ; 
+    box-shadow: 0 0px 6px rgba(39, 75, 255, 0.5);
+}
+
+
+
+
+
+
